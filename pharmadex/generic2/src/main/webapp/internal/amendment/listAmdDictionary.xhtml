@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="../../templates/layout.xhtml">
+	
+	<ui:define name="content">
+		<div class="post">
+			<h1 class="title ui-widget-header ui-corner-all">
+				#{msgs.amddictionary}</h1>
+		</div>
+		
+		<p:messages id="messages" showDetail="true" />
+		<p:growl id="growl" showSummary="true" />
+		<ui:decorate template="/templates/amendment/fullListDictionary.xhtml">
+			<ui:param name="showinform" value="true" />
+			<ui:param name="edit" value="false" />
+			<ui:param name="widthFirstCol" value="100%" />
+		</ui:decorate>
+	</ui:define>
+</ui:composition>

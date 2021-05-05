@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="#{formid}" prependId="true">
+		<p:dataTable id="amdtable" var="amendment" value="#{amendments}">
+			<p:column headerText="#{msgs.global_date}">
+				<p:outputLabel value="#{amendment.amdDate}">
+					<f:convertDateTime timeStyle="short" />
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="#{msgs.prod_name_old}">
+				<p:outputLabel value="#{amendment.prodName}" />
+			</p:column>
+			<p:column headerText="#{msgs.label_amdprocess}">
+				<p:outputLabel value="#{msgs[amendment.process.key]}" />
+			</p:column>
+			<p:column headerText="#{msgs.selectamdtype}">
+				<p:outputLabel value="#{msgs[amendment.pharmDB.key]}" />
+			</p:column>
+			<p:column headerText="#{msgs.selectamdsubj}">
+				<p:outputLabel value="#{msgs[amendment.subject.key]}" />
+			</p:column>
+			<p:column headerText="#{msgs.amdmt_state}" rendered="#{!editable}">
+				<p:outputLabel value="#{msgs[amendment.state.key]}" />
+			</p:column>
+			<p:column style="width:40px">
+				<h:commandLink action="/secure/amendment/amdreghome.faces" rendered="#{editable}" value="" styleClass="ui-icon ui-icon-pencil" >
+					<f:setPropertyActionListener value="#{amendment.id}" target="#{amdreghomeMBean.amdIdToFlash}" />
+					<f:setPropertyActionListener value="#{amendment.pharmDB}" target="#{amdreghomeMBean.amdTypeToFlash}" />
+					<f:setPropertyActionListener value="#{source}" target="#{amdreghomeMBean.returnPathToFlash}" />
+				</h:commandLink>
+				<h:commandLink action="/internal/amendment/processamdreg.faces" rendered="#{!editable}" value="" styleClass="ui-icon ui-icon-search" >
+					<f:setPropertyActionListener value="#{amendment.id}" target="#{processAmdregMBean.amdIdToFlash}" />
+					<f:setPropertyActionListener value="#{amendment.pharmDB}" target="#{processAmdregMBean.amdTypeToFlash}" />
+					<f:setPropertyActionListener value="#{source}" target="#{processAmdregMBean.returnPathToFlash}" />
+				</h:commandLink>
+			</p:column>
+		</p:dataTable>
+	</h:form>
+
+</ui:composition>

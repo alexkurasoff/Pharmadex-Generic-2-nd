@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+			<ui:param name="value"
+				value="#{amdADD_MANUFMBean.amendment.appComment}" />
+			<ui:param name="height" value="180" />
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.manufacturer_detail}" >
+		<p:panelGrid id="prodCompPnl" columns="2" >
+			<p:panel header="#{msgs.oldvalue}" style="vertical-align: top;">
+				<p:dataTable var="pComp" value="#{amdADD_MANUFMBean.oldManufs}" style="width:100%;">
+					<p:column headerText="#{msgs.manuf_name}">
+                    	<h:outputText value="#{pComp.company.companyName}"/>
+                    </p:column>
+
+               		<p:column headerText="#{msgs.applicant_country}">
+                        <h:outputText value="#{pComp.company.address.country.countryName}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs.manuf_type}">
+                        <h:outputText value="#{msgs[pComp.companyType.key]}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs.applicant_phone}">
+                        <h:outputText value="#{pComp.company.phoneNo}"/>
+                    </p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:panel header="#{msgs.newvalue}">
+				<p:commandButton id="addBtn" value="#{msgs.global_add}" oncomplete="PF('addCompanyDlg').show()" 
+						action="#{amdADD_MANUFMBean.companyMBean.initAddCompany}"
+                        process="@this" ajax="true"
+						update=":reghome:addCompanydlg :reghome:addcompany :reghome:growl">
+			            <p:resetInput target=":reghome:addcompany:companydetail" />
+				</p:commandButton>
+				
+				<p:dataTable id="comppntTable" var="prodComp"
+					value="#{amdADD_MANUFMBean.newManufs}" style="width:100%;">
+					<p:column headerText="#{msgs.manuf_name}">
+                    	<h:outputText value="#{prodComp.company.companyName}"/>
+                    </p:column>
+
+               		<p:column headerText="#{msgs.applicant_country}">
+                        <h:outputText value="#{prodComp.company.address.country.countryName}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs.manuf_type}">
+                        <h:outputText value="#{msgs[prodComp.companyType.key]}"/>
+                    </p:column>
+
+                    <p:column headerText="#{msgs.applicant_phone}">
+                        <h:outputText value="#{prodComp.company.phoneNo}"/>
+                    </p:column>
+					<p:column>
+						<p:commandLink action="#{amdADD_MANUFMBean.removeProdCompany(prodComp)}"
+									value="" styleClass="ui-icon ui-icon-trash" immediate="true" ajax="true"
+									update=":reghome:comppntTable :reghome:growl"/>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</p:panelGrid>
+        
+        <p:dialog header="#{msgs.company_info}" widgetVar="addCompanyDlg" id="addCompanydlg" resizable="true"
+                  modal="true" dynamic="true" width="800px">
+            <h:form id="addcompany">
+            	<ui:decorate template="/templates/companydetailtmpl.xhtml">
+                    <ui:param name="companydata" value="#{companyMBean.selectedCompany}"/>
+                    <ui:param name="showCompType" value="#{true}"/>
+                </ui:decorate>
+
+                <h:outputLabel/>
+                <p:commandButton value="#{msgs.global_add}"	action="#{amdADD_MANUFMBean.addProdCompany()}"
+	                 	oncomplete="if (!args.validationFailed) PF('addCompanyDlg').hide()" process=":reghome:addCompanydlg"
+	                 	update=":reghome:prodCompPnl :reghome:growl"/>
+                <p:commandButton immediate="true" value="#{msgs.global_cancel}" 
+                				 process=":reghome:addCompanydlg"
+                                 oncomplete="PF('addCompanyDlg').hide()" /> 
+            </h:form>
+        </p:dialog>
+	</p:panel>
+
+</ui:composition>

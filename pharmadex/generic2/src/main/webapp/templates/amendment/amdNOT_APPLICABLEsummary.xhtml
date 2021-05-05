@@ -1,0 +1,15 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<p:panel header="#{msgs.global_description}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+			<ui:param name="value"
+				value="#{amdNOT_APPLICABLEMBean.amendment.appComment}"/>
+			<ui:param name="rendered" value="false" />
+		</ui:decorate>
+	</p:panel>
+	
+</ui:composition>

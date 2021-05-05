@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:panelGroup id="applamds">
+		<p:panel header="#{msgs.amendments}">
+			<p:dataTable id="amdtable" var="amd" value="#{applicantMBean.applicantAmd}" style="width:100%;">
+				<p:column headerText="#{msgs.global_date}">
+					<p:outputLabel value="#{amd.amdDate}">
+						<f:convertDateTime timeStyle="short" />
+					</p:outputLabel>
+				</p:column>
+				<p:column headerText="#{msgs.label_amdprocess}">
+					<p:outputLabel value="#{msgs[amd.process.key]}" />
+				</p:column>
+				<p:column headerText="#{msgs.selectamdsubj}">
+					<p:outputLabel value="#{msgs[amd.subject.key]}" />
+				</p:column>
+				<p:column>
+					<p:commandLink action="#{applicantMBean.selectAmdAPPLICANT(amd)}"
+							styleClass="ui-icon ui-icon-search" ajax='true'
+							resetValues="true" oncomplete="PF('amdDlg').show()"
+							update="@widgetVar(amdDlg) growl">
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</h:panelGroup>
+	
+	<p:dialog header="#{msgs.amendmentsummary}" widgetVar="amdDlg" resizable="false" 
+				id="amdDlg" modal="true" dynamic="true" width="800px" height="450px">
+		<h:form id="amdformdlg">
+			<ui:decorate template="#{applicantMBean.amendmentSummaryTemplate}" />
+			<h:panelGrid columns="1" style="margin-top:10px">
+				<p:outputLabel value="#{msgs.comment_reviewer}" styleClass="label" rendered="#{empty applicantMBean.selectedApplicantAmd.staffComment ? false : true}"/>
+				<ui:decorate template="/templates/ckeditor.xhtml">
+					<ui:param name="value" value="#{applicantMBean.selectedApplicantAmd.staffComment}" />
+					<ui:param name="height" value="180"/>
+					<ui:param name="rendered" value="#{false}"/>
+				</ui:decorate>
+				<p:outputLabel value="#{msgs.comment_head}" styleClass="label" rendered="#{empty applicantMBean.selectedApplicantAmd.registrarComment ? false : true}"/>
+				<ui:decorate template="/templates/ckeditor.xhtml">
+					<ui:param name="value" value="#{applicantMBean.selectedApplicantAmd.registrarComment}" />
+					<ui:param name="height" value="180"/>
+					<ui:param name="rendered" value="#{false}"/>
+				</ui:decorate>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+		
+</ui:composition>

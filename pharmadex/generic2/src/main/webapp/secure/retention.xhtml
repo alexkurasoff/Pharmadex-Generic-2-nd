@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/admin_layout.xhtml">
+	<ui:define name="content">
+		<h:form id="retentionfrm">
+				<p:growl id="growl" showSummary="true" showDetail="false" />
+				<p:messages showSummary="true" showDetail="false" id="messages" />
+				
+				<!-- <p:remoteCommand name="updateForm" update=":retentionfrm"/>			-->	
+				<p:wizard widgetVar="wizard" id="wizardPnl" showNavBar="true" 
+							flowListener="#{retentionMBean.onFlowProcess}"
+							onback="if(confirm('#{msgs.backDlg_war}') == true){return true;}else{return false;}">
+					<p:tab id="#{retentionMBean.tab1Id}" title="#{msgs.applicant}">						
+						<ui:decorate template="/templates/selectApplication.xhtml"/>
+						<ui:include src="/secure/retentionsavecancel.xhtml">
+							<ui:param name="curstep" value="#{retentionMBean.tab1Id}" />
+							<ui:param name="visibleSave" value="#{true}"/>
+							<ui:param name="visibleSubmit" value="#{false}"/>
+						</ui:include>
+					</p:tab>
+					<p:tab id="#{retentionMBean.tab2Id}" title="#{msgs.products}">	
+						<p:panel>	
+							<p:panelGrid>					
+								<h:outputLabel value="#{retentionMBean.getSelectApplicantMBean().applicant.appName}" 
+						   			rendered="#{retentionMBean.getSelectApplicantMBean().hasApplicant()}" styleClass="label"/>	
+						   </p:panelGrid>						   					   					
+							<ui:decorate template="/templates/retentionProducts.xhtml">
+									<ui:param name="readonly" value="false" />
+							</ui:decorate>
+						</p:panel>
+						<ui:include src="/secure/retentionsavecancel.xhtml">
+							<ui:param name="curstep" value="#{retentionMBean.tab2Id}" />
+							<ui:param name="visibleSave" value="#{true}"/>
+							<ui:param name="visibleSubmit" value="#{false}"/>
+						</ui:include>						
+					</p:tab>
+					<p:tab id="#{retentionMBean.tab3Id}" title="#{msgs.payment_info}">
+							<p:commandButton value="Download Invoice" ajax="false"						
+								onclick="PrimeFaces.monitorDownload(start, stop);"							
+								icon="ui-icon-arrowthick-1-s"
+								immediate="true">							
+								<p:fileDownload value="#{retentionMBean.file}" />
+							</p:commandButton>
+						
+							<p:panel>						
+								<ui:decorate template="/templates/amdpayment.xhtml">
+									<ui:param name="payment" value="#{retentionMBean.payment}" />
+									<ui:param name="readonly" value="#{false}" />
+									<ui:param name="rosum" value="#{true}" />
+									<ui:param name="visibleSubmit" value="#{false}"/>
+								</ui:decorate>
+							</p:panel>
+						
+						<ui:include src="/secure/retentionsavecancel.xhtml">
+							<ui:param name="curstep" value="#{retentionMBean.tab3Id}" />
+							<ui:param name="visibleSave" value="#{true}"/>
+							<ui:param name="visibleSubmit" value="#{true}"/>							
+						</ui:include>
+					</p:tab>
+				</p:wizard>
+		</h:form>
+	</ui:define>
+</ui:composition>

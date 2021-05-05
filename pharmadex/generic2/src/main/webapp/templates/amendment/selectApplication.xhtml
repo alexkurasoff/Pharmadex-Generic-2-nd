@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:panelGrid columns="2" cellspacing="5" columnClasses="value, value"
+			styleClass="grid">
+		<h:outputLabel value="#{msgs.prodName}*" for="prodname" />
+		<p:autoComplete id="prodname" value="#{amdreghomeMBean.product}"
+				completeMethod="#{amdreghomeMBean.completeProductList}"
+				dropdown="true" var="it" itemLabel="#{it.prodName}"
+				itemValue="#{it.id}" forceSelection="true"
+				converter="#{prodConverter}" scrollHeight="200">
+				
+			<p:ajax event="itemSelect" update=":reghome:prodDetail"
+					listener="#{amdreghomeMBean.appChangeListenener}"
+					partialSubmit="true" process=":reghome:prodname" />
+			<!-- <p:ajax event="change"
+					listener="#{amdreghomeMBean.appChangeListenener}"
+					update=":reghome:prodDetail" partialSubmit="true"
+					process=":reghome:prodname" /> -->
+		</p:autoComplete>
+	</h:panelGrid>
+	<p:accordionPanel id="prodDetail">
+		<p:tab title="#{msgs.applicant_detail}">
+			<ui:decorate template="/templates/applicantdetailtmpl.xhtml">
+				<ui:param name="applicantdata" value="#{amdreghomeMBean.getApplicant()}" />
+				<ui:param name="input" value="#{false}" />
+			</ui:decorate>
+		</p:tab>
+	
+		<p:tab title="#{msgs.person_responsible}">
+			<ui:decorate template="/templates/userdetailtmpl.xhtml">
+				<ui:param name="userdata" value="#{amdreghomeMBean.getApplicantUser()}" />
+				<ui:param name="input" value="#{false}" />
+			</ui:decorate>
+		</p:tab>
+	
+		<p:tab title="#{msgs.product_details}">
+			<ui:include src="/templates/productdetail.xhtml">
+				<ui:param name="prodAppKey" value="#{amdreghomeMBean.getProdAppTypeKey()}"/>
+				<ui:param name="product" value="#{amdreghomeMBean.getProduct()}"/>
+			</ui:include>
+		</p:tab>
+	
+		<p:tab title="#{msgs.inn_header}">
+			<ui:include src="/templates/productinns.xhtml">
+				<ui:param name="inns" value="#{amdreghomeMBean.getInns()}"/>
+				<ui:param name="excipients" value="#{amdreghomeMBean.excipients}" />
+			</ui:include>
+		</p:tab>
+	
+		<p:tab title="#{msgs.application_detail}">
+			<ui:include src="/templates/productappdetail.xhtml">
+				<ui:param name="product" value="#{amdreghomeMBean.getProduct()}"/>
+			</ui:include>
+		</p:tab>
+	
+		<p:tab title="#{msgs.manufacturer_detail}">
+			<ui:include src="/templates/productmanufacturardetail.xhtml">
+				<ui:param name="listProdComcany" value="#{amdreghomeMBean.getProdCompanies()}"/>
+			</ui:include>
+		</p:tab>
+	</p:accordionPanel>
+</ui:composition>

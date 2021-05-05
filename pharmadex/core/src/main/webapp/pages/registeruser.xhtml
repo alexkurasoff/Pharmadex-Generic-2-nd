@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/admin_layout.xhtml">
+    <ui:define name="content">
+        <div class="post" style="width: 1024px">
+            <h1 class="title ui-widget-header ui-corner-all"> User Settings</h1>
+        </div>
+
+        <h:form id="regUsrForm">
+            <p:growl id="growl" showSummary="true"/>
+            <p:panel header="#{msgs.user_details}" id="pnl" style="margin-bottom:10px;">
+                <h:panelGrid cellspacing="10px" cellpadding="2px" columns="3" id="user"
+                             width="100%" columnClasses="col1, col2">
+                    <p:outputLabel value="#{msgs.User_username}" for="username" styleClass="label"/>
+                    <p:inputText value="#{registerUserMbean.user.username}" id="username" required="true"
+                                 styleClass="value"/>
+                    <p:message for="username"/>
+
+
+                    <p:outputLabel value="#{msgs.User_name}" for="name" styleClass="label"/>
+                    <p:inputText value="#{registerUserMbean.user.name}" id="name" required="true"
+                                 requiredMessage="#{msgs.username_validate}"/>
+                    <p:message for="name"/>
+
+                    <p:outputLabel value="#{msgs.applicant_addr1}" for="addr1"/>
+                    <p:inputText value="#{registerUserMbean.user.address.address1}" required="true" id="addr1"/>
+                    <p:message for="addr1"/>
+
+
+                    <p:outputLabel/>
+                    <p:inputText value="#{registerUserMbean.user.address.address2}"/>
+                    <p:outputLabel/>
+
+                    <p:outputLabel value="#{msgs.applicant_zipcd}" for="zipcd"/>
+                    <p:inputText value="#{registerUserMbean.user.address.zipcode}" required="true" id="zipcd"/>
+                    <p:message for="zipcd"/>
+
+                    <p:outputLabel value="#{msgs.applicant_country}" for="country"/>
+                    <p:selectOneMenu value="#{registerUserMbean.user.address.country.id}" id="country" required="true">
+                        <f:selectItem itemLabel="-" itemValue=""/>
+                        <f:selectItems value="#{countryService.countries}" var="cntry" itemLabel="#{cntry.countryName}"
+                                       itemValue="#{cntry.id}"/>
+                    </p:selectOneMenu>
+                    <p:message for="country"/>
+
+                    <p:outputLabel value="#{msgs.applicant_phone}" for="phoneno" styleClass="label"/>
+                    <p:inputText value="#{registerUserMbean.user.phoneNo}" id="phoneno" required="true"
+                    			validatorMessage="#{msgs.valid_phoneno}"/>
+                    <p:message for="phoneno"/>
+
+                    <p:outputLabel value="#{msgs.applicant_faxno}" for="faxno" styleClass="label"/>
+                    <p:inputText value="#{registerUserMbean.user.faxNo}" id="faxno"
+		                    validatorMessage="#{msgs.valid_faxno}"/>
+                    <p:message for="faxno"/>
+
+                    <p:outputLabel value="#{msgs.User_email}" for="email" styleClass="label"/>
+                    <p:inputText value="#{registerUserMbean.user.email}" id="email" required="true"
+                                 validatorMessage="#{msgs.valid_email}">
+                        <f:validateRegex
+                                pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                    </p:inputText>
+                    <p:message for="email"/>
+
+
+
+                    <!--
+                                        <h:outputLabel value="#{msgs.User_comment}" for="comment"/>
+                                        <p:inputText value="#{registerUserMbean.user.comments}" id="comment"/>
+                    -->
+
+
+                </h:panelGrid>
+
+                <h:panelGroup>
+                    <p:commandButton id="saveBtn" value="#{msgs.global_submit}" icon="ui-icon-check"
+                                     action="#{registerUserMbean.save}" ajax="false"/>
+                    <p:commandButton value="#{msgs.global_cancel}" action="#{registerUserMbean.cancel}" ajax="false"
+                                     immediate="true"/>
+                </h:panelGroup>
+
+                <p:blockUI block="pnl" trigger="saveBtn">
+                    <p:graphicImage value="/resources/images/ajax-loader.gif"/>
+                </p:blockUI>
+
+            </p:panel>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+</html>

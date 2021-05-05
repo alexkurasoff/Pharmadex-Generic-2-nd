@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:form prependId="false" id="mainFilter" >		
+		<table>
+			<tr>
+				 <td style="vertical-align: top;">
+					<p:panel>
+						<ui:decorate template="/templates/mainindicator.xhtml">
+							<ui:param name="count" value="#{homePageMBean.countOnScreening}" />	
+							<ui:param name="headerNo" value="#{msgs.prod_screening} #" />	
+							
+							<ui:param name="prodAppData" value="#{homePageMBean.onScreening}" />				
+							<ui:param name="header" value="#{msgs.applicationInScreening}" />				
+							<ui:param name="headerDate" value="#{msgs.date_submitted}" />
+							<ui:param name="prodAppID" value="prodAppIDOnScreening" />							
+						</ui:decorate>
+					</p:panel>
+			 	</td>
+			 	 <td style="vertical-align: top;">
+			 	 	<p:panel>
+				 		 <ui:decorate template="/templates/mainindicator.xhtml">
+							<ui:param name="count" value="#{homePageMBean.countAwaitingReview}" />
+							<ui:param name="headerNo" value="#{msgs.prod_screening} # #{msgs.appl_number}" />	
+								
+							<ui:param name="prodAppData" value="#{homePageMBean.awaitingReview}" />				
+							<ui:param name="header" value="#{msgs.applicationAwaitingReview}" />				
+							<ui:param name="headerDate" value="#{msgs.date_screened}" />	
+							<ui:param name="prodAppID" value="prodAppIDAwaitingReview" />
+						</ui:decorate>
+					</p:panel>
+			 	</td>
+			 </tr>
+			 <tr>
+				 <td style="vertical-align: top;">
+			 		<p:panel>
+				 		 <ui:decorate template="/templates/mainindicator.xhtml">
+							<ui:param name="count" value="#{homePageMBean.countOnReview}" />	
+							<ui:param name="headerNo" value="#{msgs.appl_number}" />
+							
+							<ui:param name="prodAppData" value="#{homePageMBean.onReview}" />				
+							<ui:param name="header" value="#{msgs.applicationOnReview}" />				
+							<ui:param name="headerDate" value="#{msgs.date_assigned}" />	
+							<ui:param name="prodAppID" value="prodAppIDOnReview" />	
+						</ui:decorate>
+					</p:panel>
+			 	</td>			 	
+				 <td style="vertical-align: top;">
+			 		<p:panel>
+				 	 	 <ui:decorate template="/templates/mainindicator.xhtml">
+							<ui:param name="count" value="#{homePageMBean.countAwaitingApproval}" />
+							<ui:param name="headerNo" value="#{msgs.appl_number}" />
+								
+							<ui:param name="prodAppData" value="#{homePageMBean.awaitingApproval}" />				
+							<ui:param name="header" value="#{msgs.applicationAwaitingApproval}" />				
+							<ui:param name="headerDate" value="#{msgs.date_recommended}" />	
+							<ui:param name="prodAppID" value="prodAppIDAwaitingApproval" />	
+						</ui:decorate>
+					</p:panel>	
+				</td>
+			</tr>
+		</table>	
+	</h:form>
+
+</ui:composition>

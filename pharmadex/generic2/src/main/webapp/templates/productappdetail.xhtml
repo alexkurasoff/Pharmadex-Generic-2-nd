@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:panelGrid cellspacing="10" style="width: 100%;" id ="prodappdetail">
+		<p:row>
+			<p:column styleClass="col1_top">
+				<h:outputLabel value="#{msgs.product_shelflife}" />
+			</p:column>
+			<p:column styleClass="col2_top">
+				<div>
+					<p:outputLabel value="#{product.shelfLife}" />	
+				</div>			
+			</p:column>
+			<p:column styleClass="col1_top">
+				<h:outputLabel value="#{msgs.product_packsize}" />
+			</p:column>
+			<p:column styleClass="col2_top">
+				<div>				
+					<h:outputLabel value="#{product.packSize}" />
+				</div>				
+			</p:column>
+		</p:row>
+		<p:row>
+			<p:column styleClass="col1_top">
+				<h:outputLabel value="#{msgs.product_conttype}" />
+			</p:column>
+			<p:column styleClass="col2_top">
+				<div>
+					<h:outputLabel value="#{product.contType}" />
+				</div>
+			</p:column>
+			<p:column styleClass="col1_top">
+				<h:outputLabel value="#{msgs.product_storcndtn}" />
+			</p:column>
+			<p:column styleClass="col2_top">
+				<div>
+					<h:outputLabel value="#{product.storageCndtn}" />
+				</div>
+			</p:column>
+		</p:row>
+		<p:row>
+			<p:column styleClass="col1_top">
+				<h:outputLabel value="#{msgs.prod_indications}" />
+			</p:column>
+			<p:column styleClass="col2_top">
+				<div>
+					<h:outputLabel value="#{product.indications}" />
+				</div>
+			</p:column>
+			<p:column styleClass="col1_top">
+				<h:outputLabel value="#{msgs.prod_posology}" />
+			</p:column>
+			<p:column styleClass="col2_top">
+				<div>
+					<h:outputLabel value="#{product.posology}" />
+				</div>
+			</p:column>
+		</p:row>
+	</p:panelGrid>
+
+</ui:composition>

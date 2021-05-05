@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="../templates/registration_layout.xhtml">
+                
+    <ui:define name="regcontent">
+        <div class="post">
+            <h1 class="title ui-widget-header ui-corner-all"> #{msgs.cancel_prod}</h1>
+        </div>
+
+        <h:form prependId="false">
+            <p:growl/>
+            <ui:include src="../templates/registerProdList.xhtml">
+				<ui:param name="prodlist" value="#{productMbean.canceledProds}" />
+				<ui:param name="filterlist" value="#{productMbean.filteredProducts}" />
+				<ui:param name="visibleCancel" value="#{true}" />
+			</ui:include>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

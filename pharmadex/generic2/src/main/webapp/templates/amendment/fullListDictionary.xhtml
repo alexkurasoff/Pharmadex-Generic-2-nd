@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:remove>
+	param 'showinform' true - show template in amdreghome
+					   false - show in listAmdDictionary by Admin
+	param 'edit' true - user change radioBtn column
+				 false - user readOnly radioBtn column
+	param 'widthFirstCol' - width by dictionary table
+	</ui:remove>
+	<h:form id="dictform">
+		<p:panel rendered="#{!edit}">
+			<p:panelGrid style="width: 100%;">
+					<p:row>
+						<p:column width="300px">
+							<p:outputLabel value="#{msgs.label_amdsubject}" styleClass="label" />
+						</p:column>
+						<p:column width="300px">
+							<p:outputLabel value="#{msgs.label_amdprocess}" styleClass="label" />
+						</p:column>
+						<p:column rendered="#{showinform}">
+							<p:outputLabel value="" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column width="300px">
+							<p:selectOneMenu value="#{editAmdDictionaryMBean.selectedViewSubject}" 
+											style="width: 290px;">
+								<f:selectItem itemLabel="-" itemValue="" />
+								<f:selectItems value="#{editAmdDictionaryMBean.amdSubjectes}"
+										var="viewSubj" itemLabel="#{msgs[viewSubj.key]}" />
+								<p:ajax event="change" listener="#{editAmdDictionaryMBean.subjectChangeListenener}"
+                        		 		update="@form:dictList @form:conditionList @form:lblProcess"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column width="300px">
+							<p:selectOneMenu value="#{editAmdDictionaryMBean.selectedViewProcess}"
+											style="width: 290px;">
+									<f:selectItem itemLabel="-" itemValue="" />
+									<f:selectItems value="#{editAmdDictionaryMBean.amdProcesses}"
+										var="viewProc" itemLabel="#{msgs[viewProc.key]}" />
+									<p:ajax event="change" listener="#{editAmdDictionaryMBean.proccesChangeListenener}"
+                        		 		update="@form:dictList @form:conditionList @form:lblProcess"/>
+								</p:selectOneMenu>
+						</p:column>
+						<p:column rendered="#{showinform}">
+							<p:commandButton value="#{msgs.global_add}" action="/internal/amendment/formAmdDictionary.faces"
+											 ajax="false">
+								<f:setPropertyActionListener value="/internal/amendment/listAmdDictionary.xhtml" 
+																	target="#{editAmdDictionaryMBean.returnPathToFlash}" />
+							</p:commandButton>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
+ 			
+			<table>
+				<tr>
+					<td valign="top" width="#{widthFirstCol}">
+						<p:panel header="#{msgs.label_formulation}" rendered="#{!showinform and edit}">
+							<p:outputLabel value="#{editAmdDictionaryMBean.selectedItem.formulation}"
+										escape="false" />
+						</p:panel>
+						<p:dataTable id="dictList" var="item" value="#{editAmdDictionaryMBean.getFullList(showinform)}" 
+							selection="#{editAmdDictionaryMBean.selectedItem}"
+							rowKey="#{item.id}" rendered="#{!(!showinform and edit)}"
+							style="width:100%;"
+							rows="5" paginator="true"
+			                paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport}"
+			                currentPageReportTemplate="{startRecord} - {endRecord} of {totalRecords}" >
+							
+							<p:ajax event="rowSelectRadio" listener="#{editAmdDictionaryMBean.onRowSelect}"
+								 update="@form:conditionList @form:lblProcess"/>
+					       
+					        <p:column selectionMode="single" style="width:16px;text-align:center" rendered="#{!showinform}"/>
+					        
+							<p:column headerText="#{msgs.label_formulation}">
+								<h:outputLabel value="#{item.formulation}" escape="false"/>
+							</p:column>
+							<p:column headerText="#{msgs.label_edit}" exportable="false" style="width:80px;" rendered="#{showinform}">
+								<h:panelGrid id="cmd_panel" columns="2" border="0" cellpadding="0" cellspacing="2">
+									<p:commandLink action="#{editAmdDictionaryMBean.removeFromSet(item)}"
+										styleClass="ui-icon ui-icon-trash" ajax='true' update="@form"
+										rendered="#{item.active}">
+									</p:commandLink>
+									<p:commandLink action="#{editAmdDictionaryMBean.removeFromSet(item)}"
+										styleClass="ui-icon ui-icon-arrowreturnthick-1-n" ajax='true' update="@form"
+										rendered="#{!item.active}">
+									</p:commandLink>
+									<h:commandLink action="/internal/amendment/formAmdDictionary.faces" styleClass="ui-icon ui-icon-pencil"
+													rendered="#{item.active}" >
+										<f:setPropertyActionListener value="#{item.id}" 
+																		target="#{editAmdDictionaryMBean.amdIdToFlash}" />
+										<f:setPropertyActionListener value="/internal/amendment/listAmdDictionary.xhtml" 
+																		target="#{editAmdDictionaryMBean.returnPathToFlash}" />
+									</h:commandLink>
+									<h:outputLabel value="" rendered="#{!item.active}"/>
+								</h:panelGrid>
+							</p:column>
+						</p:dataTable>
+					</td>
+					<td valign="top" >
+						<p:panel id="lblProcess" header="#{msgs.label_amdprocess}" rendered="#{!showinform}">
+							<h:outputLabel value="#{msgs[editAmdDictionaryMBean.selectedItem.process.key]}" />
+						</p:panel>
+						<p:dataTable id="conditionList" var="item" value="#{editAmdDictionaryMBean.listAmdConditions}"
+									rendered="#{!showinform}">
+							<p:column headerText="#{msgs.label_amdcondition}">
+								<h:outputText value="#{item.condition.condition}" escape="false" />
+							</p:column>
+							<p:column style="width:100px">
+					            <p:outputLabel value="#{msgs[item.answer.value.key]}" rendered="#{edit}"/>
+					            <p:selectOneButton value="#{item.answer.value}" required="true"
+					            					requiredMessage="#{msgs.amdcondition_incomplete}"
+					            					rendered="#{!edit}">
+					            	<p:ajax listener="#{editAmdDictionaryMBean.onAnswerChangeListenener}" />
+					                <f:selectItems value="#{globalLists.yesNo}" var="val" 
+					                				itemLabel="#{msgs[val.key]}"/>
+					            </p:selectOneButton>
+					        </p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+			</table>
+		</h:form>
+
+</ui:composition>

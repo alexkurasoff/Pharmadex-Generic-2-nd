@@ -1,0 +1,98 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui"
+                template="../templates/registration_layout.xhtml">
+                
+	<ui:define name="regcontent">
+        <div class="post">
+            <h1 class="title ui-widget-header ui-corner-all"> #{dashboardMBean.title}</h1>
+        </div>
+        <h:form prependId="false">
+       	 <p:commandButton action="#{dashboardMBean.loadFinreportList(false)}" value="#{msgs.btn_byYears}"
+	                                 update=":items growl"/>
+            <p:commandButton action="#{dashboardMBean.loadFinreportList(true)}" value="#{msgs.btn_byQuarter}"
+            update=":items growl"/>        	        	
+	        <p:growl id="growl" showDetail="false" showSummary="true" />        	
+	        <p:dataTable id="items" var="item" value="#{dashboardMBean.list}"
+                         widgetVar="itemstable"
+                         filteredValue="#{dashboardMBean.filteredList}"
+                         paginator="true" rows="20" paginatorPosition="bottom"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="20,40,100">
+                         
+          		<p:column filterBy="#{dashboardMBean.valueColumn(1, item)}"
+                          sortBy="#{dashboardMBean.valueColumn(1, item)}"
+                          filterStyle="width: 90%;" style="margin: 5px; padding: 5px;" 
+                			headerText="#{dashboardMBean.headerColumn(1)}" 
+                			rendered="#{dashboardMBean.renderedColumn(1)}">
+                    <h:outputText value="#{dashboardMBean.valueColumn(1, item)}"/>
+                </p:column>
+                <p:column headerText="#{dashboardMBean.headerColumn(2)}" rendered="#{dashboardMBean.renderedColumn(2)}">
+                    <h:outputText value="#{dashboardMBean.valueColumn(2, item)}"/>
+                </p:column>
+                <p:column headerText="#{dashboardMBean.headerColumn(3)}" rendered="#{dashboardMBean.renderedColumn(3)}">
+                    <h:outputText value="#{dashboardMBean.valueColumn(3, item)}"/>
+                </p:column>
+                <p:column headerText="#{dashboardMBean.headerColumn(4)}" rendered="#{dashboardMBean.renderedColumn(4)}">                  
+                    <p:commandLink id="sumPrescreen" value="#{dashboardMBean.valueColumn(4, item)}" ajax="true"
+						action="#{dashboardMBean.changeYearQuartType(item,0)}"
+						oncomplete="PF('showApplDlg').show()" update="showAppName" />
+                </p:column>
+                 <p:column headerText="#{dashboardMBean.headerColumn(5)}" rendered="#{dashboardMBean.renderedColumn(5)}">                  
+                    <p:commandLink id="sum" value="#{dashboardMBean.valueColumn(5, item)}" ajax="true"
+						action="#{dashboardMBean.changeYearQuartType(item,1)}"
+						oncomplete="PF('showApplDlg').show()" update="showAppName" />
+                </p:column>
+                <p:column headerText="#{dashboardMBean.headerColumn(6)}" rendered="#{dashboardMBean.renderedColumn(5)}">
+                    <h:outputText value="#{dashboardMBean.valueColumn(6, item)}"/>
+                </p:column>
+                <p:column headerText="#{dashboardMBean.headerColumn(7)}" rendered="#{dashboardMBean.renderedColumn(6)}">                  
+                    <p:commandLink id="sumAmd" value="#{dashboardMBean.valueColumn(7, item)}" ajax="true"
+						action="#{dashboardMBean.changeYearQuartType(item,2)}"
+						oncomplete="PF('showApplDlg').show()" update="showAppName" />
+                </p:column>
+            </p:dataTable>
+            
+	        <p:dialog modal="true" widgetVar="showApplDlg"
+				header="#{dashboardMBean.headerDlg}" id="showAppName" dynamic="true"
+				width="600">				
+					<p:dataTable id="itemsAppl"
+						value="#{dashboardMBean.listByAppNameFinreportList}" var="item">
+						<p:column headerText="#{msgs.applicant_name}" width="80%">
+							<h:outputText value="#{item.app_name}" />
+						</p:column>						
+						<p:column headerText="#{msgs.col_fee}" width="20%">
+							<h:outputText value="#{item.sum}" />
+						</p:column>						
+					</p:dataTable>			
+			</p:dialog>
+
+           <h:panelGrid columns="2" width="100%">
+                <p:panel>
+                    <h:commandLink>
+                        <p:graphicImage value="/resources/images/excel.png"/>
+                        <p:dataExporter type="xls" target="items" fileName="#{msgs.menu_finreport}"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="/resources/images/pdf.png"/>
+                        <p:dataExporter type="pdf" target="items" fileName="#{msgs.menu_finreport}"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="/resources/images/csv.png"/>
+                        <p:dataExporter type="csv" target="items" fileName="#{msgs.menu_finreport}"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage value="/resources/images/xml.png"/>
+                        <p:dataExporter type="xml" target="items" fileName="#{msgs.menu_finreport}"/>
+                    </h:commandLink>
+                </p:panel>
+            </h:panelGrid>
+		</h:form>
+    </ui:define>
+</ui:composition>

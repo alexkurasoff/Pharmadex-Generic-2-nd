@@ -1,0 +1,228 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="../../templates/admin_layout.xhtml">
+
+	<ui:define name="content">
+		<h:form id="reghome" enctype="multipart/form-data">
+			<p:growl id="growl" showDetail="false" />
+
+			<h:panelGrid columns="2" columnClasses="menu,content">
+				<h:panelGrid columns="2" columnClasses="menu,content">
+					<p:menu style="width:198px">
+						<p:submenu label="#{msgs.Registration}">
+							<p:menuitem value="#{msgs.global_save}" icon="ui-icon-disk"
+								action="#{editAmdDictionaryMBean.saveDictionary()}" ajax="false" />
+							<p:menuitem value="#{msgs.global_exit}" immediate="true"
+								icon="ui-icon-extlink" action="#{editAmdDictionaryMBean.exit()}"
+								ajax="false" />
+						</p:submenu>
+					</p:menu>
+
+					<h:panelGroup styleClass="ui-widget">
+						<p:messages id="messages" showDetail="false" showSummary="true" />
+
+						<p:panel header="#{msgs.amddictionary_detail}"
+							style="width: 830px;">
+							<h:panelGrid columns="2" border="0" cellpadding="0"
+								cellspacing="2" columnClasses="label value" style="width: 99%;">
+								<p:outputLabel value="#{msgs.label_active}" />
+								<p:selectBooleanCheckbox
+									value="#{editAmdDictionaryMBean.selectedItem.active}" />
+								<ui:remove>
+									<p:outputLabel value="#{msgs.label_chapter} *" />
+
+									<p:autoComplete id="ch_name"
+										value="#{editAmdDictionaryMBean.selectedItem.chapter}"
+										completeMethod="#{editAmdDictionaryMBean.completeChapters}"
+										var="it" itemLabel="#{it}" itemValue="#{it}"
+										forceSelection="false" scrollHeight="200" required="true"
+										requiredMessage="#{msgs.label_chapter} #{msgs.requiredvalue}"
+										style="width: 98%;">
+										<p:ajax event="itemSelect"
+											listener="#{editAmdDictionaryMBean.onItemSelect}"
+											update=":reghome:subch_name" />
+									</p:autoComplete>
+
+									<p:outputLabel value="#{msgs.label_subchapter}" />
+									<p:autoComplete id="subch_name"
+										value="#{editAmdDictionaryMBean.selectedItem.subChapter}"
+										completeMethod="#{editAmdDictionaryMBean.completeSubChapters}"
+										var="item" itemLabel="#{item}" itemValue="#{item}"
+										forceSelection="false" scrollHeight="200"
+										inputStyle="width: 98%;">
+									</p:autoComplete>
+								</ui:remove>
+								<p:outputLabel value="#{msgs.label_formulation} *" />
+								<ui:decorate template="/templates/ckeditor.xhtml">
+									<ui:param name="value"
+										value="#{editAmdDictionaryMBean.selectedItem.formulation}" />
+									<ui:param name="height" value="180" />
+									<ui:param name="width" value="480" />
+									<ui:param name="required" value="#{true}" />
+								</ui:decorate>
+
+								<p:outputLabel value="#{msgs.label_amdsubject} *" />
+								<p:selectOneMenu id="listSubj"
+									value="#{editAmdDictionaryMBean.selectedItem.subject}"
+									required="true"
+									requiredMessage="#{msgs.label_amdsubject} #{msgs.requiredvalue}">
+									<f:selectItem itemLabel="-" itemValue="" />
+									<f:selectItems value="#{editAmdDictionaryMBean.amdSubjectes}"
+										var="amdSubj" itemLabel="#{msgs[amdSubj.key]}" />
+								</p:selectOneMenu>
+
+								<p:outputLabel value="#{msgs.label_amdprocess} *" />
+								<p:selectOneMenu id="listProc"
+									value="#{editAmdDictionaryMBean.selectedItem.process}"
+									required="true"
+									requiredMessage="#{msgs.label_amdprocess} #{msgs.requiredvalue}">
+									<f:selectItem itemLabel="-" itemValue="" />
+									<f:selectItems value="#{editAmdDictionaryMBean.amdProcesses}"
+										var="amdProc" itemLabel="#{msgs[amdProc.key]}" />
+								</p:selectOneMenu>
+
+								<p:outputLabel value="#{msgs.label_amdpharmadexDB} *" />
+								<p:selectOneMenu id="listPharms"
+									value="#{editAmdDictionaryMBean.selectedItem.pharmadexDB}"
+									required="true"
+									requiredMessage="#{msgs.label_amdpharmadexDB} #{msgs.requiredvalue}">
+									<f:selectItem itemLabel="-" itemValue="" />
+									<f:selectItems value="#{editAmdDictionaryMBean.pharmadexDBes}"
+										var="amdPharms" itemLabel="#{msgs[amdPharms.key]}" />
+								</p:selectOneMenu>
+							</h:panelGrid>
+						</p:panel>
+
+						<p:tabView id="view" style="width: 830px;"
+							activeIndex="#{editAmdDictionaryMBean.selectedTab}"
+							dynamic="true" cache="false">
+							<p:ajax event="tabChange"
+								listener="#{editAmdDictionaryMBean.onTabChange}" />
+							<p:tab title="#{msgs.tab_amdcondition}" id="tab_cond">
+								<p:commandButton value="#{msgs.global_add}"
+									oncomplete="PF('addConditionDlg').show()" />
+								<p:dataTable id="condList" var="itemC"
+									value="#{editAmdDictionaryMBean.selectedItem.amendmentConditions}">
+									<p:column headerText="#{msgs.label_amdcondition}">
+										<p:commandLink
+											action="#{editAmdDictionaryMBean.selectCondition(itemC)}"
+											oncomplete="PF('addConditionDlg').show()">
+											<h:outputText value="#{itemC.condition}" escape="false" />
+										</p:commandLink>
+									</p:column>
+									<p:column style="width: 50px;">
+										<h:outputLabel value="" styleClass="ui-icon ui-icon-close"
+											rendered="#{!itemC.active}" />
+									</p:column>
+								</p:dataTable>
+							</p:tab>
+							<p:tab title="#{msgs.tab_amddocument}" id="tab_docs">
+								<p:commandButton value="#{msgs.global_add}"
+									oncomplete="PF('addDocDlg').show()" />
+								<p:dataTable id="docsList" var="itemD"
+									value="#{editAmdDictionaryMBean.selectedItem.amendmentDocuments}">
+									<p:column headerText="#{msgs.label_name}">
+										<p:commandLink
+											action="#{editAmdDictionaryMBean.selectDocument(itemD)}"
+											oncomplete="PF('addDocDlg').show()">
+											<h:outputText value="#{itemD.name}" escape="false" />
+										</p:commandLink>
+									</p:column>
+									<p:column style="width: 50px;">
+										<h:outputLabel value="" styleClass="ui-icon ui-icon-close"
+											rendered="#{!itemD.active}" />
+									</p:column>
+								</p:dataTable>
+							</p:tab>
+						</p:tabView>
+					</h:panelGroup>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+
+		<p:dialog header="#{msgs.label_amdcondition}"
+			widgetVar="addConditionDlg" resizable="false" id="addConditionDlg"
+			modal="true" dynamic="true" closable="false">
+			<h:form id="conditiondlg">
+				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="2"
+					columnClasses="label value">
+					<p:outputLabel value="#{msgs.label_active}" />
+					<p:selectBooleanCheckbox
+						value="#{editAmdDictionaryMBean.selectedCondition.active}" />
+				</h:panelGrid>
+				<ui:decorate template="/templates/ckeditor.xhtml">
+					<ui:param name="value"
+						value="#{editAmdDictionaryMBean.selectedCondition.condition}" />
+					<ui:param name="height" value="180" />
+					<ui:param name="required" value="#{true}" />
+				</ui:decorate>
+
+				<h:panelGrid columns="2" style="margin-top:10px">
+					<p:commandButton id="approveBtn" value="#{msgs.global_save}"
+						icon="ui-icon-gear" ajax="false"
+						action="#{editAmdDictionaryMBean.addAmendmentCondition()}"
+						oncomplete="if (!args.validationFailed) PF('addConditionDlg').hide()"
+						update=":conditiondlg :reghome:view" />
+					<p:commandButton id="cancellet" type="button"
+						value="#{msgs.global_cancel}"
+						onclick="PF('addConditionDlg').hide()"
+						action="#{editAmdDictionaryMBean.cancel()}" icon="ui-icon-close"
+						ajax="false" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog header="#{msgs.label_amddocument}" widgetVar="addDocDlg"
+			resizable="false" id="addDocDlg" modal="true" dynamic="true"
+			closable="false">
+			<h:form id="docdlg">
+				<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="2"
+					columnClasses="label value">
+					<p:outputLabel value="#{msgs.label_active}" />
+					<p:selectBooleanCheckbox
+						value="#{editAmdDictionaryMBean.selectedDocument.active}" />
+				</h:panelGrid>
+				<ui:decorate template="/templates/ckeditor.xhtml">
+					<ui:param name="value"
+						value="#{editAmdDictionaryMBean.selectedDocument.name}" />
+					<ui:param name="height" value="180" />
+					<ui:param name="required" value="#{true}" />
+				</ui:decorate>
+
+				<h:panelGrid columns="2" style="margin-top:10px">
+					<p:commandButton id="approveBtn" value="#{msgs.global_save}"
+						icon="ui-icon-gear" ajax="false"
+						action="#{editAmdDictionaryMBean.addAmendmentDocument()}"
+						oncomplete="if (!args.validationFailed) PF('addDocDlg').hide()"
+						update=":docdlg :reghome:view" />
+					<p:commandButton id="cancellet" type="button"
+						value="#{msgs.global_cancel}" onclick="PF('addDocDlg').hide()"
+						action="#{editAmdDictionaryMBean.cancel()}" icon="ui-icon-close"
+						ajax="false" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<p:dialog modal="true" widgetVar="statusDialog" draggable="false"
+			closable="false" resizable="false" dynamic="true" showHeader="false">
+			<p:graphicImage value="/resources/images/ajax-loader.gif" />
+		</p:dialog>
+
+		<script type="text/javascript">
+			function start() {
+			PF('statusDialog').show();
+			setTimeout(function() {
+				PF('statusDialog').hide();
+			}, 3000);
+			}
+				
+			function stop() {
+			PF('statusDialog').hide();
+			}
+		</script>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="../templates/layout.xhtml">
+
+    <ui:define name="content">
+        <h:form id="useraccesslist">
+
+            <h:panelGroup id="useraccesspanel">
+                <div class="post">
+                    <h1 class="title ui-widget-header ui-corner-all"> User Access List</h1>
+                </div>
+
+                <p:panel toggleable="true" toggleSpeed="250" header="User History">
+                    <p:commandLink action="#{userMBean.exception}"/>
+                    <f:facet name="header">
+                        <h:outputText value="#{appBean.name}"/>
+                    </f:facet>
+                    <p:dataTable id="useraccesstable" var="a" value="#{userAccessMBean.allUserAccess}"
+                                 emptyMessage="#{msgs.label_no_records_found}">
+                        <p:column filterBy="#{a.user.name}"
+                                  sortBy="#{a.user.name}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msgs.User_name}"/>
+                            </f:facet>
+
+                            #{a.user.name}
+                        </p:column>
+
+                        <p:column filterBy="#{a.application}"
+                                  sortBy="#{a.application}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msgs.browser}"/>
+                            </f:facet>
+                            #{a.application}
+                        </p:column>
+
+                        <p:column filterBy="#{a.ipAddress}"
+                                  sortBy="#{a.ipAddress}">
+                            <f:facet name="header">
+                                <h:outputText value="#{msgs.ip_address}"/>
+                            </f:facet>
+                            #{a.ipAddress}
+                        </p:column>
+
+                        <p:column headerText="#{msgs.login_date}">
+                            <h:outputText value="#{a.loginDate}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="#{msgs.logout_date}">
+                            <h:outputText value="#{a.logoutDate}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+
+                    </p:dataTable>
+                </p:panel>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

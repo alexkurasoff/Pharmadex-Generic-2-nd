@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+			<ui:param name="value"
+				value="#{amdREPLACEMENT_IPIMBean.amendment.appComment}" />
+			<ui:param name="rendered" value="false" />
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.global_update} #{msgs.product_active}">
+		<p:panelGrid id="companydetail" columns="2">
+			<p:panel header="#{msgs.oldvalue}" style="vertical-align: top;">
+				<h:panelGrid columns="2" columnClasses="col1, col2" >
+					<p:outputLabel value="#{msgs.product_active}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.editedValue.excipient.name}"/>
+								
+					<p:outputLabel value="#{msgs.dos_strength}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.editedValue.dosStrength}"/>
+								
+					<p:outputLabel value="#{msgs.dos_unit}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.editedValue.dosUnit.uom}"/>
+								
+					<p:outputLabel value="#{msgs.inn_funct}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.editedValue.function}"/>
+							
+					<p:outputLabel value="#{msgs.inn_ref}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.editedValue.refStd}"/>
+				</h:panelGrid>
+			</p:panel>
+			<p:panel header="#{msgs.newvalue}">
+				<h:panelGrid columns="2" columnClasses="col1, col2">
+					<p:outputLabel value="#{msgs.product_active}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.newValue.excipient.name}"/>
+								
+					<p:outputLabel value="#{msgs.dos_strength}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.newValue.dosStrength}"/>
+								
+					<p:outputLabel value="#{msgs.dos_unit}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.newValue.dosUnit.uom}"/>
+								
+					<p:outputLabel value="#{msgs.inn_funct}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.newValue.function}"/>
+							
+					<p:outputLabel value="#{msgs.inn_ref}"/>
+					<p:outputLabel value="#{amdREPLACEMENT_IPIMBean.newValue.refStd}"/>
+				</h:panelGrid>
+			</p:panel>
+		</p:panelGrid>
+    </p:panel>
+</ui:composition>

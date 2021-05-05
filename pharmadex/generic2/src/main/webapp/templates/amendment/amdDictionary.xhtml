@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	
+	<p:panel header="#{msgs.label_formulation}">
+		<p:outputLabel value="#{amdreghomeMBean.amendmentDictionary.formulation}" escape="false" />
+	</p:panel>
+	<p:panel id="lblProcess" header="#{msgs.label_amdprocess}" >
+		<h:outputLabel value="#{msgs[amdreghomeMBean.amendmentDictionary.process.key]}" />
+	</p:panel>
+	<p:dataTable id="conditionList" var="item" value="#{amdreghomeMBean.amendmentMbean.amendment.conditions}">
+		<p:column headerText="#{msgs.label_amdcondition}">
+			<h:outputText value="#{item.condition.condition}" escape="false" />
+		</p:column>
+		<p:column style="width:100px">
+			<p:outputLabel value="#{msgs[item.answer.value.key]}"/>
+		</p:column>
+	</p:dataTable>
+</ui:composition>

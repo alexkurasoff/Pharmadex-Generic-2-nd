@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/registration_layout.xhtml">
+
+	<ui:define name="regcontent">
+		<p:panel header="#{msgs.rejectedinvoice}">
+			<ui:decorate template="/templates/retentionlist.xhtml">
+				<ui:param name="invoices"
+					value="#{retentionMBean.rejectedInvoices}" />
+				<ui:param name="formid" value="retlist" />
+				<ui:param name="editable" value="false" />
+				<ui:param name="source" value="/secure/retentionrejectedlist.faces" />
+			</ui:decorate>
+		</p:panel>
+	</ui:define>
+
+</ui:composition>

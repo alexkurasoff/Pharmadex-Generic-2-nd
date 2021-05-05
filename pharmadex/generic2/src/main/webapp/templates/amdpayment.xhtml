@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<h:panelGrid columns="2" cellspacing="10" columnClasses="label, value"
+		styleClass="grid">
+
+		<p:outputLabel value="#{msgs['PayType.message']}" for="payType#{readonly}"
+			styleClass="label" />
+		<p:selectOneMenu id="payType#{readonly}"
+			value="#{payment.payment_form}"
+			disabled="#{readonly || payment.payment_received}" required="true"
+			requiredMessage="#{msgs['PayType.error']}">
+			<f:selectItem itemLabel="-" itemValue="" />
+			<f:selectItems value="#{globalLists.payTypes}" var="payType"
+				itemLabel="#{msgs[payType.key]}" />
+		</p:selectOneMenu>
+
+		<p:outputLabel value="#{msgs.reciept_no}" for="receiptno#{readonly}"
+			styleClass="label" />
+		<p:inputText id="receiptno#{readonly}" value="#{payment.payment_receipt}"
+			disabled="#{readonly || payment.payment_received }" required="true"
+			requiredMessage="#{msgs['reciept_required']}" />
+								
+		<!-- fee_sum -->	
+		<p:outputLabel value="#{msgs.fee_sum}" for="feeSum#{readonly}"
+			styleClass="label" />
+		<p:inputText id="feeSum#{readonly}" value="#{payment.feeSum}"
+			disabled="#{readonly || payment.payment_received || (empty rosum ? false:rosum)}" required="true"
+			requiredMessage="#{msgs['reciept_required']}" />
+		<!-- fee_sum -->	
+
+		<p:outputLabel value="#{msgs.fee_submit_date}" for="feesubmitdt#{readonly}"
+			styleClass="label" />
+		<p:calendar value="#{payment.payment_payDate}"
+			id="feesubmitdt#{readonly}" showOn="button"
+			pattern="#{userAccessMBean.workspace.datePattern}" required="true"
+			requiredMessage="Fee Submission Date is missing"
+			disabled="#{readonly || payment.payment_received}" />
+
+	</h:panelGrid>
+
+</ui:composition>

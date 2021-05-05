@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panel >
+		<p:dataTable var="item" value="#{amdreghomeMBean.listAmdDocs}"
+							emptyMessage="#{msgs.amdDictionary_noDocs}">
+			<p:column headerText="#{msgs.label_name}">
+				<h:outputText value="#{item.document.name}" escape="false" />
+			</p:column>
+			<p:column style="width:100px">
+				<p:outputLabel value="#{msgs[item.answer.value.key]}" rendered="#{empty editable ? false:!editable}"/>
+				<p:selectOneButton value="#{item.answer.value}" required="true"
+										requiredMessage="#{msgs.amddocuments_incomplete}"
+										rendered="#{empty editable ? true:editable}">
+					<p:ajax listener="#{amdreghomeMBean.onAnswerChangeListenener}" />
+					<f:selectItems value="#{globalLists.yesNo}" var="val" itemLabel="#{msgs[val.key]}"/>
+				</p:selectOneButton>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

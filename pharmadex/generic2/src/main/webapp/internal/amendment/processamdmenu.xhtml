@@ -1,0 +1,35 @@
+<!-- Creates the table with passed in values of product -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+    <p:menu id="amdmenu" style="width:198px">
+        <p:submenu label="#{msgs.Registration}">
+       		<p:menuitem value="#{msgs.global_recommended}" 
+                        onclick="PF('recomDlg').show()" id="recomMI" 
+                        icon="ui-icon-gear"
+                        rendered="#{processAmdregMBean.canRecomNotRecom()}"/>
+          <!-- <p:menuitem value="#{msgs.global_not_recommended}" 
+                        onclick="PF('notrecomDlg').show()" id="notrecomMI" 
+                        icon="ui-icon-gear"
+                        rendered="#{processAmdregMBean.canRecomNotRecom()}"/>-->
+            <p:menuitem value="#{msgs.global_reject}" 
+                        onclick="PF('rejectDlg').show()" id="rejectMI" 
+                        icon="ui-icon-gear"
+                        rendered="#{processAmdregMBean.canRejected()}"/>
+            <p:menuitem value="#{msgs.global_approve}" 
+                        onclick="PF('approveDlg').show()" id="approveMI" 
+                        icon="ui-icon-gear"
+                        rendered="#{processAmdregMBean.canApproved()}"/>
+			
+			 <p:menuitem value="#{msgs.global_save}" action="#{processAmdregMBean.save}" immediate="true"
+            			ajax="false" icon="ui-icon-extlink"
+            			 rendered="#{processAmdregMBean.canRecomNotRecom()}"/>
+            			
+            <p:menuitem value="#{msgs.global_exit}" action="#{processAmdregMBean.cancel}" immediate="true" 
+            			ajax="false" icon="ui-icon-extlink"/>
+        </p:submenu>
+    </p:menu>
+
+
+</ui:composition>

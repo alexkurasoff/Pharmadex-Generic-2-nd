@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/templates/admin_layout.xhtml">
+
+	<ui:define name="content">
+		<h:form id="reghome">
+			<p:growl id="growl" showSummary="true" showDetail="false" />
+			<p:messages showSummary="true" showDetail="false" id="messages" />
+
+			<ui:decorate template="/templates/ckeditor.xhtml">
+				<ui:param name="value" value="" />
+				<ui:param name="height" value="180" />
+				<ui:param name="rendered" value="false"></ui:param>
+			</ui:decorate>
+			<p:wizard widgetVar="wizard" id="wizardPnl" showNavBar="true" 
+				flowListener="#{amdreghomeMBean.onFlowProcess}"
+				onback="if(confirm('#{msgs.backDlg_war}') == true){return true;}else{return false;}">
+				
+				<p:tab id="#{amdreghomeMBean.tab1Id}" title="#{msgs.selectamdtype}">
+					<p:panel width="100%">
+						<ui:decorate template="#{amdreghomeMBean.templateTypeTab}">
+							<ui:param name="showinform" value="false" />
+							<ui:param name="edit" value="#{amdreghomeMBean.saveAmendment}" />
+							<ui:param name="widthFirstCol" value="60%" />
+						</ui:decorate>
+					</p:panel>
+					<ui:include src="amdsavecancel.xhtml">
+						<ui:param name="curstep" value="#{amdreghomeMBean.tab1Id}" />
+						<ui:param name="visibleSave" value="#{false}"/>
+					</ui:include>
+				</p:tab>
+				<p:tab id="#{amdreghomeMBean.tab2Id}" title="#{msgs.selectAppl}">
+					<ui:decorate template="/templates/amendment/selectApplicant.xhtml" />
+					<ui:include src="amdsavecancel.xhtml" >
+						<ui:param name="curstep" value="#{amdreghomeMBean.tab2Id}" />
+						<ui:param name="visibleSave" value="#{true}"/>
+					</ui:include>
+				</p:tab>
+				<p:tab id="#{amdreghomeMBean.tab3Id}" title="#{msgs.selectProduct}">
+					<p:panel rendered="#{amdreghomeMBean.visibleProductTab}">
+						<ui:decorate template="/templates/amendment/selectApplication.xhtml"/>
+					</p:panel>
+					<p:panel rendered="#{!amdreghomeMBean.visibleProductTab}">
+						<p:outputLabel value="#{msgs.global_na}"/>
+					</p:panel>
+					<ui:include src="amdsavecancel.xhtml" >
+						<ui:param name="curstep" value="#{amdreghomeMBean.tab3Id}" />
+						<ui:param name="visibleSave" value="#{amdreghomeMBean.visibleProductTab}"/>
+					</ui:include>
+				</p:tab>
+				<p:tab id="#{amdreghomeMBean.tab4Id}" title="#{amdreghomeMBean.docsTabHeader}">
+					<ui:decorate template="#{amdreghomeMBean.templateDocsTab}">
+						<ui:param name="docsPnlId" value="docsPnl"/>
+						<ui:param name="prodAppChecklists" value="#{amdreghomeMBean.amdProdAppChecklists}"/>
+						<ui:param name="editable" value="true"/>
+					</ui:decorate>
+					
+					<ui:include src="amdsavecancel.xhtml" >
+						<ui:param name="curstep" value="#{amdreghomeMBean.tab4Id}" />
+						<ui:param name="visibleSave" value="#{empty amdreghomeMBean.listAmdDocs and !amdreghomeMBean.processNEWAPPL ? false:true}"/>
+					</ui:include>
+				</p:tab>
+				<p:tab id="#{amdreghomeMBean.tab5Id}" title="#{msgs.amendment_details}">
+					<ui:decorate template="#{amdreghomeMBean.detailTemplate}" />
+					<ui:include src="amdsavecancel.xhtml">
+						<ui:param name="curstep" value="#{amdreghomeMBean.tab5Id}" />
+						<ui:param name="visibleSave" value="#{true}"/>
+					</ui:include>
+				</p:tab>
+				<p:tab id="#{amdreghomeMBean.tab6Id}" title="#{msgs.payment_info}">
+					<ui:decorate template="/templates/amdpayment.xhtml">
+						<ui:param name="payment" value="#{amdreghomeMBean.payment}" />
+						<ui:param name="readonly" value="false" />
+					</ui:decorate>
+					<ui:include src="amdsavecancel.xhtml">
+						<ui:param name="curstep" value="#{amdreghomeMBean.tab6Id}" />
+						<ui:param name="visibleSave" value="#{true}"/>
+					</ui:include>
+				</p:tab>
+				<p:tab id="#{amdreghomeMBean.tab7Id}" title="#{msgs.amendmentsummary}">
+					<ui:decorate template="/templates/amendment/amdSummaryInfo.xhtml">
+						<ui:param name="applicantName" value="#{amdreghomeMBean.applicant.appName}" />
+						<ui:param name="prodName" value="#{amdreghomeMBean.product.prodName}" />
+						<ui:param name="amdstate" value="#{msgs[amdreghomeMBean.amendmentMbean.amendment.state.key]}" />
+					</ui:decorate>
+					<ui:decorate template="/templates/amdpayment.xhtml">
+						<ui:param name="payment" value="#{amdreghomeMBean.payment}" />
+						<ui:param name="readonly" value="true" />
+					</ui:decorate>
+					<ui:decorate template="#{amdreghomeMBean.summaryTemplate}" />
+					<p:panel header="#{msgs.label_amdListcondition}" >
+						<p:dataTable var="item" value="#{editAmdDictionaryMBean.listAmdConditions}">
+							<p:column headerText="#{msgs.label_amdcondition}">
+								<h:outputText value="#{item.condition.condition}" escape="false" />
+							</p:column>
+							<p:column style="width:100px">
+								<p:outputLabel value="#{msgs[item.answer.value.key]}"/>
+							</p:column>
+						</p:dataTable>
+					</p:panel>
+					<p:panel header="#{amdreghomeMBean.docsTabHeader}" >
+						<ui:decorate template="#{amdreghomeMBean.templateDocsTab}">
+							<ui:param name="docsPnlId" value="docsPnlShow"/>
+							<ui:param name="prodAppChecklists" value="#{amdreghomeMBean.amdProdAppChecklists}"/>
+							<ui:param name="editable" value="false"/>
+						</ui:decorate>
+					</p:panel>
+					<ui:include src="amdsavecancel.xhtml" >
+						<ui:param name="curstep" value="#{amdreghomeMBean.tab7Id}" />
+						<ui:param name="visibleSave" value="#{true}"/>
+					</ui:include>
+				</p:tab>
+				
+			</p:wizard>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:outputLabel value="#{msgs.confirm_payment_prescr}" styleClass="label" />
+
+	<h:panelGrid columns="2" cellspacing="10" columnClasses="label, value"
+		styleClass="grid">
+
+		<p:outputLabel value="#{msgs['PayType.message']}" for="preescrPayType"
+			styleClass="label" />
+		<!-- prodApp.prescreenPayType prodApp.prescreenfeeReceived-->
+		<p:selectOneMenu id="preescrPayType"
+			value="#{prodApp.paymentPrescreen.payment_form}" 
+			disabled="#{prodApp.paymentPrescreen.payment_received}" required="true"
+			requiredMessage="#{msgs['PayType.error']}">
+			<f:selectItem itemLabel="-" itemValue="" />
+			<f:selectItems value="#{globalLists.payTypes}" var="payType"
+				itemLabel="#{msgs[payType.key]}" />
+		</p:selectOneMenu>
+
+		<!-- prodApp.prescreenReceiptNo prodApp.prescreenfeeReceived-->
+		<p:outputLabel value="#{msgs.reciept_no}" for="receiptno"
+			styleClass="label" />
+		<p:inputText id="receiptno" value="#{prodApp.paymentPrescreen.payment_receipt}"
+			disabled="#{prodApp.paymentPrescreen.payment_received}"
+			required="true"
+			requiredMessage="#{msgs['reciept_required']}" />
+
+		<!-- prodApp.prescreenfeeSubmittedDt prodApp.prescreenfeeReceived-->
+		<p:outputLabel value="#{msgs.fee_submit_date}" for="feesubmitdt"
+			styleClass="label" />
+		<p:calendar value="#{prodApp.paymentPrescreen.payment_payDate}"
+			id="feesubmitdt" showOn="button"
+			pattern="#{userAccessMBean.workspace.datePattern}" required="true"
+			requiredMessage="Fee Submission Date is missing"
+			disabled="#{prodApp.paymentPrescreen.payment_received}" />
+
+	</h:panelGrid>
+
+
+</ui:composition>

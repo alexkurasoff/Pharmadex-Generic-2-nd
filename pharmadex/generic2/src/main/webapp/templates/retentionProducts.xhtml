@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<h:panelGrid columns="2" cellspacing="10" columnClasses="label, value" styleClass="grid">
+			<h:outputLabel value="#{msgs.col_expireYear}" styleClass="label" />
+				<p:autoComplete id="year"
+					value="#{retentionMBean.curYear}"
+					completeMethod="#{retentionMBean.completeYearList}"
+					dropdown="true" scrollHeight="200"
+					disabled="#{readonly}">										
+					<p:ajax event="itemSelect"
+						update="@form" 
+						listener="#{retentionMBean.appChangeListenener}"
+						partialSubmit="true" process="@this" oncomplete="updateProdTbl()"/><!-- :retentionfrm:year -->
+					<p:ajax event="change"
+						listener="#{retentionMBean.appChangeListenener}"
+						update="@form" partialSubmit="true" oncomplete="updateProdTbl()"
+						process="@this" /> <!-- :retentionfrm:year -->
+				</p:autoComplete>
+	</h:panelGrid>	
+	<p:remoteCommand name="updateProdTbl" update="@widgetVar(prodTable)"/>
+	<p:panelGrid columns="2">
+		
+		<p:commandLink id="viewHumanLink" value="#{msgs.col_human}" ajax="true" 
+			style="font-weight: #{retentionMBean.lastClicked == 'HUMAN' ? 'bold':'normal'}" update="@parent"
+			oncomplete="updateProdTbl()"
+			onclick="PF('prodTable').clearFilters()" >
+				<f:setPropertyActionListener value="#{retentionMBean.findHumanProductByApplicant()}" target="#{retentionMBean.curlist}"/>		
+		</p:commandLink>				
+		<p:commandLink id="viewVeterenaryLink" value="#{msgs.col_veterenary}" ajax="true" 
+			style="font-weight: #{retentionMBean.lastClicked == 'VETERINARY' ? 'bold':'normal'}" update="@parent"
+			oncomplete="updateProdTbl()"
+			onclick="PF('prodTable').clearFilters()">
+				<f:setPropertyActionListener value="#{retentionMBean.findVeterenaryProductByApplicant()}" target="#{retentionMBean.curlist}"/>		
+		</p:commandLink>
+		
+		<h:outputLabel value="#{retentionMBean.findSizeHumanProductByApplicant()}"/>		
+		<h:outputLabel value="#{retentionMBean.findSizeVeterenaryProductByApplicant()}"/>
+			
+	</p:panelGrid>
+	
+	<!-- <p:panel>-->
+		<p:dataTable id="products" var="prod"
+				value="#{retentionMBean.curlist}" 
+				filteredValue="#{retentionMBean.filteredProducts}" 
+				widgetVar="prodTable" paginator="true"
+				rows="20"
+				paginatorPosition="bottom"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="20,40,100">
+				
+				<p:column filterBy="#{prod.regNo}" sortBy="#{prod.regNo}"
+					filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.col_regNumber}" />
+					</f:facet>
+					<h:outputText value="#{prod.regNo}" />
+				</p:column>		
+				
+				<p:column filterBy="#{prod.prodName}" sortBy="#{prod.prodName}" 
+							filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.col_regname}" />
+					</f:facet>
+					 <p:commandLink id="viewLink" value="#{prod.prodName}" action="/public/productdetail" ajax="false">
+						 <f:param name="prodAppID" value="#{prod.prodAppID}" /> 
+					</p:commandLink>
+				</p:column>
+		
+			 <p:column filterBy="#{prod.innNames}" sortBy="#{prod.innNames}"
+					filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.col_innnames}" />
+					</f:facet>
+					<h:outputText value="#{prod.innNames}" />
+				</p:column>
+				
+				<p:column filterBy="#{prod.dosForm}" sortBy="#{prod.dosForm}"
+					filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.col_dosform}" />
+					</f:facet>
+					<h:outputText value="#{prod.dosForm}" />
+				</p:column>
+		
+				<p:column filterBy="#{prod.dosStrength}" sortBy="#{prod.dosStrength}"
+					filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+					<f:facet name="header">
+						<h:outputText value="#{msgs.col_strength}" />
+					</f:facet>
+					<h:outputText value="#{prod.dosStrength}" />
+				</p:column>					
+		</p:dataTable>
+<!-- </p:panel>-->
+</ui:composition>

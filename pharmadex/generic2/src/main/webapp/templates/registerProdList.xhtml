@@ -1,0 +1,137 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:remove>
+		'prodlist'
+		'filterlist'
+		'visibleSuspend', default false
+		'visibleCancel', default false
+	</ui:remove>
+	<p:dataTable id="products" var="prod"
+		value="#{prodlist}" widgetVar="prodTable" paginator="true"
+		filteredValue="#{filterlist}" rows="20"
+		paginatorPosition="bottom"
+		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="20,40,100">
+		
+		<p:column filterBy="#{prod.appName}" sortBy="#{prod.appName}"
+			filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+			<f:facet name="header">
+				<h:outputText value="#{msgs.col_applicant}" />
+			</f:facet>
+			<h:outputText value="#{prod.appName}" />
+		</p:column>
+		
+		<p:column filterBy="#{prod.prodName}" sortBy="#{prod.prodName}" 
+					filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+			<f:facet name="header">
+				<h:outputText value="#{msgs.col_regname}" />
+			</f:facet>
+			<p:commandLink id="viewLink" value="#{prod.prodName}" action="/public/productdetail" ajax="false">
+				<f:param name="prodAppID" value="#{prod.prodAppID}" />
+			</p:commandLink>
+		</p:column>
+
+		<p:column filterBy="#{prod.innNames}" sortBy="#{prod.innNames}"
+			filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+			<f:facet name="header">
+				<h:outputText value="#{msgs.col_innnames}" />
+			</f:facet>
+			<h:outputText value="#{prod.innNames}" />
+		</p:column>
+		
+		<p:column filterBy="#{prod.dosForm}" sortBy="#{prod.dosForm}"
+			filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+			<f:facet name="header">
+				<h:outputText value="#{msgs.col_dosform}" />
+			</f:facet>
+			<h:outputText value="#{prod.dosForm}" />
+		</p:column>
+
+		<p:column filterBy="#{prod.dosStrength}" sortBy="#{prod.dosStrength}"
+			filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+			<f:facet name="header">
+				<h:outputText value="#{msgs.col_strength}" />
+			</f:facet>
+			<h:outputText value="#{prod.dosStrength}" />
+		</p:column>
+		
+		<p:column filterBy="#{prod.regNo}" sortBy="#{prod.regNo}"
+			filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+			<f:facet name="header">
+				<h:outputText value="#{msgs.col_regNumber}" />
+			</f:facet>
+			<h:outputText value="#{prod.regNo}" />
+		</p:column>
+
+		<p:column filterBy="#{prod.regDate}" sortBy="#{prod.regDate}"
+			filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+			<f:facet name="header">
+				<h:outputText value="#{msgs.col_regDate}" />
+			</f:facet>
+			<h:outputLabel value="#{prod.regDate}" >
+				<f:convertDateTime pattern="#{userAccessMBean.workspace.datePattern}" />
+            </h:outputLabel>
+		</p:column>
+
+		<p:column sortBy="#{prod.regDate}" visible="#{empty visibleSuspend ? false : visibleSuspend}"
+			filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+            <f:facet name="header">
+            	<h:outputText value="#{msgs.col_duedate}"/>
+            </f:facet>
+            <h:outputLabel value="#{productMbean.findDueDateSuspDetail(prod.prodAppID)}">
+            	<f:convertDateTime pattern="#{userAccessMBean.workspace.datePattern}" />
+            </h:outputLabel>
+        </p:column>
+        
+        <p:column sortBy="#{prod.regDate}" visible="#{empty visibleCancel ? false : visibleCancel}"
+			filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+            <f:facet name="header">
+            	<h:outputText value="#{msgs.col_decisiondate}"/>
+            </f:facet>
+            <h:outputLabel value="#{productMbean.findDecisionDateSuspDetail(prod.prodAppID)}">
+            	<f:convertDateTime pattern="#{userAccessMBean.workspace.datePattern}" />
+            </h:outputLabel>
+        </p:column>
+                
+		<p:column filterBy="#{prod.shcedul}" sortBy="#{prod.shcedul}"
+			filterStyle="width: 90%;" style="margin: 5px; padding: 5px;">
+			<f:facet name="header">
+				<h:outputText value="#{msgs.col_schedul}" />
+			</f:facet>
+			<h:outputText value="#{prod.shcedul}" />
+		</p:column>
+	</p:dataTable>
+
+	<h:panelGrid columns="2" width="100%">
+		<p:panel>
+			<h:commandLink>
+				<p:graphicImage value="/resources/images/excel.png" />
+				<p:dataExporter type="xls" target="products"
+					fileName="#{msgs.product_list}" />
+			</h:commandLink>
+
+			<h:commandLink>
+				<p:graphicImage value="/resources/images/pdf.png" />
+				<p:dataExporter type="pdf" target="products"
+					fileName="#{msgs.product_list}" />
+			</h:commandLink>
+
+			<h:commandLink>
+				<p:graphicImage value="/resources/images/csv.png" />
+				<p:dataExporter type="csv" target="products"
+					fileName="#{msgs.product_list}" />
+			</h:commandLink>
+
+			<h:commandLink>
+				<p:graphicImage value="/resources/images/xml.png" />
+				<p:dataExporter type="xml" target="products"
+					fileName="#{msgs.product_list}" />
+			</h:commandLink>
+		</p:panel>
+	</h:panelGrid>
+
+</ui:composition>

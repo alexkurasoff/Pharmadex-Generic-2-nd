@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:dataTable id="companyTable" var="company"
+		value="#{listProdComcany}" style="width:100%;">
+		<p:column headerText="#{msgs.global_name}">
+			<h:outputText value="#{company.company.companyName}" />
+		</p:column>
+
+		<p:column headerText="#{msgs.applicant_country}">
+			<h:outputText
+				value="#{company.company.address.country.countryName}" />
+		</p:column>
+
+		<p:column headerText="#{msgs.manuf_type}">
+			<h:outputText value="#{msgs[company.companyType.key]}" />
+		</p:column>
+
+		<p:column headerText="#{msgs.applicant_phone}">
+			<h:outputText value="#{company.company.phoneNo}"/>
+		</p:column>
+	</p:dataTable>
+	
+</ui:composition>

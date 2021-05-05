@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<h:panelGrid columns="4" cellpadding="10px"
+		cellspacing="6px" width="100%" columnClasses="col1, col2, col1, col2">
+
+		<p:outputLabel value="#{msgs.manuf_name}" />
+		<p:inputText value="#{companyMBean.selectedCompany.companyName}" disabled="true"/>
+
+		<p:outputLabel value="#{msgs.applicant_phone}" style="text-align: right;"/>
+		<p:inputText value="#{companydata.phoneNo}" disabled="true"/>
+
+		<p:outputLabel />
+		<p:outputLabel />
+		<p:outputLabel />
+		<p:outputLabel />
+
+		<p:outputLabel value="#{msgs.applicant_addr1}*" />
+		<p:inputText value="#{companydata.address.address1}" disabled="true"/>
+
+		<p:outputLabel value="#{msgs.applicant_faxno}" />
+		<p:inputText value="#{companydata.faxNo}" disabled="true"/>
+
+		<p:outputLabel />
+		<p:inputText value="#{companydata.address.address2}" disabled="true"/>
+
+		<p:outputLabel value="#{msgs.applicant_email}" />
+		<p:inputText value="#{companydata.email}" disabled="true"/>
+
+		<p:outputLabel value="#{msgs.applicant_zipcd}" />
+		<p:inputText value="#{companydata.address.zipcode}" disabled="true"/>
+
+		<p:outputLabel value="#{msgs.gmpinsp_done}" styleClass="label" />
+		<p:selectBooleanCheckbox value="#{companydata.gmpInsp}" disabled="true"/>
+
+		<o:outputLabel value="#{msgs.applicant_country}*" />
+		<p:inputText value="#{companydata.address.country.countryName}" disabled="true"/>
+
+		<p:outputLabel value="#{msgs.gmp_cert_no}" styleClass="label" />
+		<p:inputText value="#{companydata.gmpCertNo}" disabled="true"/>
+
+		<p:outputLabel value="#{msgs.applicant_filenumber}"/>
+		<p:inputText value="#{companydata.siteNumber}" disabled="true" />
+
+		<p:outputLabel value="#{msgs.gmp_cert_date}" styleClass="label"/>
+		<p:calendar value="#{companydata.gmpInspDate}" showOn="button"
+					 pattern="#{userAccessMBean.workspace.datePattern}" disabled="true"/>
+
+		<p:outputLabel value="#{msgs.company_type}" rendered="#{showCompType}"/>
+		<h:outputText value="#{companyMBean.companyTypesString}" escape="false" rendered="#{showCompType}"/>
+
+		<p:outputLabel />
+		<p:outputLabel />
+	</h:panelGrid>
+</ui:composition>

@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+			<ui:param name="value"
+				value="#{amdADD_APIMBean.amendment.appComment}" />
+			<ui:param name="height" value="180" />
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.active_substance}" >
+		<p:panelGrid id="prodInnPnl" columns="2" >
+			<p:panel header="#{msgs.oldvalue}" style="vertical-align: top;">
+				<p:dataTable var="pInn" value="#{amdADD_APIMBean.oldInns}" style="width:100%;">
+					<p:column headerText="#{msgs.product_innname}">
+						<h:outputText value="#{pInn.inn.name}" />
+					</p:column>
+					<p:column headerText="#{msgs.dos_strength}">
+						<h:outputText value="#{pInn.dosStrength}" />
+					</p:column>
+					<p:column headerText="#{msgs.dos_unit}">
+						<h:outputText value="#{pInn.dosUnit.uom}" />
+					</p:column>
+					<p:column headerText="#{msgs.manuf_name}">
+						<h:outputText value="#{pInn.company.companyName}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:panel header="#{msgs.newvalue}">
+				<p:commandButton id="addBtn" value="#{msgs.add_active_substance}" oncomplete="PF('addInnDlg').show()" 
+                        process="@this" ajax="true"
+						update=":reghome:addInndlg :reghome:addInn :reghome:growl">
+			            <p:resetInput target=":reghome:addInn:inndetail" />
+				</p:commandButton>
+				
+				<p:dataTable id="innpntTable" var="prodInn"
+					value="#{amdADD_APIMBean.newInns}" style="width:100%;">
+					<p:column headerText="#{msgs.product_innname}">
+						<h:outputText value="#{prodInn.inn.name}" />
+					</p:column>
+					<p:column headerText="#{msgs.dos_strength}">
+						<h:outputText value="#{prodInn.dosStrength}" />
+					</p:column>
+					<p:column headerText="#{msgs.dos_unit}">
+						<h:outputText value="#{prodInn.dosUnit.uom}" />
+					</p:column>
+					<p:column headerText="#{msgs.manuf_name}">
+						<h:outputText value="#{prodInn.company.companyName}" />
+					</p:column>
+					<p:column>
+						<p:commandLink action="#{amdADD_APIMBean.removeProdInn(prodInn)}"
+									value="" styleClass="ui-icon ui-icon-trash" immediate="true" ajax="true"
+									update=":reghome:innpntTable :reghome:growl"/>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</p:panelGrid>
+        
+        <p:dialog header="#{msgs.add_active_substance}" widgetVar="addInnDlg" id="addInndlg" resizable="true"
+                  modal="true" dynamic="true" width="800px">
+            <h:form id="addInn">
+            	<ui:decorate template="/templates/prodInnDetail.xhtml">
+					<ui:param name="prodInn" value="#{amdADD_APIMBean.newItemInn}"/>
+				    <ui:param name="edit" value="#{true}"/>
+			    </ui:decorate>
+                <p:commandButton value="#{msgs.global_add}"	action="#{amdADD_APIMBean.addProdInn()}"
+	                 	oncomplete="if (!args.validationFailed) PF('addInnDlg').hide()" process=":reghome:addInndlg"
+	                 	update=":reghome:prodInnPnl :reghome:growl"/>
+                <p:commandButton immediate="true" value="#{msgs.global_cancel}" 
+                				 process=":reghome:addInndlg"
+                                 oncomplete="PF('addInnDlg').hide()" /> 
+            </h:form>
+        </p:dialog>
+	</p:panel>
+
+</ui:composition>

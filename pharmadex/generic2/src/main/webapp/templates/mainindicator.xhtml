@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<p:panelGrid >
+			<f:facet name="header">		       
+		        <p:row>
+		            <p:column style="text-align: left;"> 
+		           		 <p:outputLabel value="#{header}"
+							style="width: 80%; font-weight:bold;"/>
+		            </p:column>
+		            <p:column>
+		            	 <p:outputLabel value="#{count}"
+							style="text-align: left; font-weight:bold;" /> 
+		            </p:column>		           
+		        </p:row>	 
+	    	</f:facet>
+	    	
+			<p:row>
+				<p:column colspan="2">
+					<p:dataTable id="#{prodAppID}" var="prodApps"
+						rows="5" paginatorPosition="bottom" paginator="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="20,40,100"
+						value="#{prodAppData}">
+						<p:column  
+							filterBy="#{prodApps.proprietaryName}" 
+							sortBy="#{prodApps.proprietaryName}" 
+							filterStyle="width: 90%;" 
+							style="width:30%; padding: 5px;"
+							>							
+							<f:facet name="header">
+								<h:outputText value="#{msgs.prod_name}"/>
+							</f:facet>
+						 	<p:commandLink id="viewLink" value="#{prodApps.proprietaryName}"
+								action="/public/productdetail" ajax="false"
+								update=":#{prodAppID}">
+								<f:param name="prodAppID" value="#{prodApps.prodAppId}" />
+							</p:commandLink>				
+						</p:column>
+				
+						<p:column style="width:20%; padding: 5px;">							
+							<f:facet name="header">
+								<h:outputText value="#{msgs.appl_type}" /> 
+							</f:facet>
+							<h:outputText value="#{msgs[prodApps.prodAppType.key]}" />
+						</p:column>	
+				
+						<p:column style="width:25%; padding: 5px; ">													
+							<f:facet name="header">
+								<!-- <h:outputText value="#{msgs.appl_number}" />-->
+								<h:outputText value="#{headerNo}"/>								
+							</f:facet>
+							<h:outputText value="#{prodApps.prodSrcNo}" /> 
+							<br/>
+							<h:outputText value="#{prodApps.prodAppNo}" />
+						</p:column>
+						
+						<p:column style="width:25%; padding: 0px;">														
+							<f:facet name="header" >
+								<h:outputText value="#{headerDate}" />
+							</f:facet>
+							<h:outputLabel converter="javax.faces.DateTime"
+								value="#{prodApps.date}" />
+						</p:column>						
+					</p:dataTable>
+				</p:column>				
+			</p:row>
+		</p:panelGrid>
+	
+</ui:composition>

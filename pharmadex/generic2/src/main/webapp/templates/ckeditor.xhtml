@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:remove>
+	Uniform CK Editor plus read only area, params:
+		height, default 500
+		width, default 700
+		value is value
+		rendered, default true
+		required, default false
+	</ui:remove>
+	<pe:ckEditor value="#{value}"
+		height="#{empty height ? 500 : height}"
+		width="#{empty width ? 700 : wigth}"
+		toolbar="[['PasteText','PasteFromWord','-','Bold', '-','NumberedList', 'BulletedList']]"
+		rendered="#{empty rendered ? true : rendered}"
+		required="#{empty required ? false : required}"
+		/>
+		<h:outputText escape="false"
+						value="#{value}"
+						rendered="#{empty rendered ? false : rendered ? false : true}" />
+
+</ui:composition>

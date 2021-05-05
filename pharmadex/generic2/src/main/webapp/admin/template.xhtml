@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="../templates/layout.xhtml">
+
+	<ui:define name="content">
+		<p:growl id="growl" showDetail="true" showSummary="true" />		
+		<h:form id="templateForm">
+			<h:panelGrid columns="1" style="margin-bottom:10px"	cellspacing="6px" columnClasses="label value">			
+				<p:commandLink value="#{msgs.global_add} #{msgs.template}" oncomplete="PF('adddlg').show();" update=":addfrm"
+		              ajax="true">
+		              <f:setPropertyActionListener value="#{false}" target="#{templMBean.staffOnly}"/>
+	        	</p:commandLink>		
+			</h:panelGrid>						
+			<p:dataTable id="fileTemplateID" var="fileTemplate"	rows="7" value="#{templMBean.fullList}">										
+				<p:column style="width:40%; padding: 5px; ">													
+					<f:facet name="type">
+						<h:outputText value="#{msgs.filename}"/>
+					</f:facet>
+					<h:outputText value="#{msgs[fileTemplate.templateType.key]}" />
+				</p:column>
+				
+				<p:column style="width:50%; padding: 5px;">	
+					<h:outputText value="#{fileTemplate.fileName}" />
+				</p:column>	
+				<p:column style="width:10%; padding: 5px;">	
+					<p:commandLink value="#{msgs.label_edit}" oncomplete="PF('editdlg').show();" update=":editfrmdlg" ajax="true">
+                    	<f:setPropertyActionListener value="#{fileTemplate}" target="#{templMBean.fileTemplate}"/>
+                    </p:commandLink>
+				</p:column>					
+			</p:dataTable>	
+		</h:form> 
+				
+		<p:dialog widgetVar="adddlg" modal="true" resizable="true" header="#{msgs.template}" dynamic="true"
+			height="200px" width="550px" >
+			 <h:form id="addfrm" >
+			 		<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="2" columnClasses="label value">
+						<p:outputLabel value="#{msgs.label_staffOnly}" />
+						<p:selectBooleanCheckbox value="#{templMBean.staffOnly}" >
+							<p:ajax event="change"/>
+						</p:selectBooleanCheckbox>
+					</h:panelGrid>
+				
+					<p:outputLabel value="#{msgs.templateType}*"/>
+					<p:autoComplete value="#{templMBean.templateType}"
+						completeMethod="#{templMBean.completeTemplateTypeList()}"
+						dropdown="true" 
+						var="it" itemLabel="#{msgs[it.key]}" itemValue="#{it}"
+						 forceSelection="true" required="true"
+						 size="50"
+						requiredMessage="#{msgs.valid_templateTypey}" 
+						converter="#{templateTypeConverter}" scrollHeight="200" style="margin:10px">	
+						<p:ajax event="itemSelect" listener="#{templMBean.onItemSelect}"
+						update="@form" />		
+					 </p:autoComplete>	
+					 <p:fileUpload
+					    rendered="#{templMBean.uploadTemplate}"
+						fileUploadListener="#{templMBean.handleFileUpload}" oncomplete="PF('adddlg').hide()"
+						mode="advanced" dragDropSupport="true" update="templateForm growl"
+						sizeLimit="100000" allowTypes="/(\.|\/)(docx)$/" />	
+				
+			 </h:form>
+		 </p:dialog>
+		 
+		 <p:dialog widgetVar="editdlg" id="editfrmdlg" modal="true" resizable="true" header="#{msgs[templMBean.fileTemplate.templateType.key]}" dynamic="true"
+		 	height="150px" width="550px">
+			  <h:form id="editfrm" style="margin:10px">
+			  			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="2" columnClasses="label value">
+							<p:outputLabel value="#{msgs.label_staffOnly}" />
+							<p:selectBooleanCheckbox value="#{templMBean.staffOnly}" >
+								<p:ajax event="change" listener="#{templMBean.staffOnlyChangeListenener}"/>
+							</p:selectBooleanCheckbox>
+						</h:panelGrid>
+					
+						 <p:fileUpload
+							fileUploadListener="#{templMBean.handleFileChangeUpload}" oncomplete="PF('editdlg').hide()"
+							mode="advanced" dragDropSupport="true" update="templateForm growl"
+							sizeLimit="100000" allowTypes="/(\.|\/)(docx)$/" />
+						<p:commandButton value="Download" ajax="false"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+							icon="ui-icon-arrowthick-1-s"
+							rendered="true">
+							<p:fileDownload value="#{templMBean.file}" />
+						</p:commandButton>
+						
+				</h:form>
+		 </p:dialog>
+		 
+		 <p:dialog modal="true" widgetVar="statusDialog" header="Status"
+			draggable="false" closable="false" resizable="false" dynamic="true">
+			<p:graphicImage value="/resources/images/ajax-loader.gif" />
+		</p:dialog>
+	</ui:define>
+	
+	<script type="text/javascript">
+			function start() {
+    			PF('statusDialog').show();
+			}
+ 
+			function stop() {
+   			 PF('statusDialog').hide();
+			}
+	</script>
+</ui:composition>

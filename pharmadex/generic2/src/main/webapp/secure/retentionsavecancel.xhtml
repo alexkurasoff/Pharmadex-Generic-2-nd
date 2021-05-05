@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:o="http://omnifaces.org/ui">
+	<table style="width: 100%">
+    	<tr>
+        	<td align="left">
+        		<p:commandButton value="#{msgs.global_cancel}" immediate="true" icon="ui-icon-extlink" 
+						 		 action="#{retentionMBean.cancel}" ajax="false"/>
+			</td>
+			<td align="right" >
+        		<p:commandButton value="#{msgs.global_save}" action="#{retentionMBean.save(curstep)}" icon="ui-icon-disk" 
+								 update=":retentionfrm :retentionfrm:growl" ajax="true"
+								 rendered="#{visibleSave}"/> 
+				<p:commandButton value="#{msgs.global_submit}" 
+									action="#{retentionMBean.submit}" ajax="false"
+                                 rendered="#{visibleSubmit}">                	
+                </p:commandButton>
+			</td>
+        </tr>
+    </table>
+</ui:composition>

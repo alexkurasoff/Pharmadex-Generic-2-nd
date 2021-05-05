@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+		 	<ui:param name="value"
+				value="#{amdSHAPEMBean.amendment.appComment}" />
+			<ui:param name="height" value="180"/>
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.prod_desc}">
+		<p:panelGrid columns="2">
+			<p:panel header="#{msgs.oldvalue}">
+				 <h:outputLabel value="#{amdSHAPEMBean.productDesc}"
+					style="font-weight: bold; width:300px"/>						
+			</p:panel>
+			<p:panel header="#{msgs.newvalue}">				
+				<p:inputTextarea id="prodDesc" value="#{amdSHAPEMBean.prodDesc}" rows="4" cols="100"
+                     title="ProdDesc" required="true" maxlength="4096"/>
+			</p:panel>
+		</p:panelGrid>
+	</p:panel> 
+
+</ui:composition>

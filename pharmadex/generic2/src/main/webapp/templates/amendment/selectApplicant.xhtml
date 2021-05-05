@@ -1,0 +1,124 @@
+<!-- Creates the table with passed in values of product -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:panel header="#{msgs.applicant_detail}">
+		<h:panelGroup>
+			<h:outputLabel value="#{msgs.select_applicant_list}" />
+			<h:panelGrid columns="1" cellpadding="10px">
+				<p:commandLink value="#{msgs.applicant_lookup}"
+						oncomplete="PF('addapplicantDlg').show()" immediate="true"
+						style="font-weight: bolder; font-size: larger" />
+				<p:outputLabel value="#{msgs.applicant_lookup_info}"
+						styleClass="hint" />
+			</h:panelGrid>
+		</h:panelGroup>
+	
+		<h:panelGroup rendered="#{amdreghomeMBean.hasApplicant()}">
+			<ui:decorate template="/templates/applicantdetailtmpl.xhtml">
+				<ui:param name="applicantdata" value="#{amdreghomeMBean.applicant}" />
+				<ui:param name="input" value="#{false}" />
+			</ui:decorate>
+		</h:panelGroup>
+	</p:panel>
+	
+	<h:panelGroup rendered="#{amdreghomeMBean.hasApplicant()}">
+		<p:panel header="#{msgs.person_responsible}">
+			<h:panelGroup id="userdetail">
+				<ui:decorate template="/templates/userdetailtmpl.xhtml">
+					<ui:param name="userdata" value="#{amdreghomeMBean.applicantUser}" />
+					<ui:param name="input" value="#{false}" />
+				</ui:decorate>
+			</h:panelGroup>
+		</p:panel>
+	</h:panelGroup>
+
+	<p:dialog header="#{msgs.applicant}" widgetVar="addapplicantDlg"
+		id="addapplicantdlg" width="600">
+		<h:panelGrid columns="2" cellspacing="5" columnClasses="value, value"
+			styleClass="grid">
+			<h:outputLabel value="#{msgs.applicant_name}" for="appname" />
+			<p:autoComplete id="appname"
+				value="#{amdreghomeMBean.selectedApplicant}"
+				completeMethod="#{amdreghomeMBean.completeApplicantList}"
+				dropdown="true" var="it" itemLabel="#{it.appName}"
+				itemValue="#{it.applcntId}" forceSelection="true"
+				converter="#{applicantConverter}" scrollHeight="200">
+				<p:ajax event="itemSelect"
+					update=":reghome:appdetaildlg :reghome:btnpnl"
+					listener="#{amdreghomeMBean.appChangeListenener}"
+					partialSubmit="true" process=":reghome:appname" />
+				<p:ajax event="change"
+					listener="#{amdreghomeMBean.appChangeListenener}"
+					update=":reghome:appdetaildlg :reghome:btnpnl" partialSubmit="true"
+					process=":reghome:appname" />
+			</p:autoComplete>
+		</h:panelGrid>
+
+		<h:panelGroup id="appdetaildlg">
+			<h:panelGrid columns="4" cellpadding="10px" cellspacing="6px"
+				width="100%" columnClasses="col1, col2, col1, col2"
+				rendered="#{amdreghomeMBean.hasSelectedApplicant()}">
+				<p:outputLabel value="#{msgs.applicant_name}" />
+				<p:outputLabel
+					value="#{amdreghomeMBean.selectedApplicant.appName}"
+					style="font-weight: bold;" />
+
+				<ui:decorate template="/templates/addrtempl.xhtml">
+					<ui:param name="addressdata"
+						value="#{amdreghomeMBean.selectedApplicant.address}" />
+					<ui:param name="input" value="false" />
+				</ui:decorate>
+<!--  
+				<h:outputLabel />
+				<h:outputLabel />
+
+				<p:outputLabel value="#{msgs.applicant_type}*" />
+				<p:outputLabel
+					value="#{amdreghomeMBean.selectedApplicant.applicantType}"
+					style="font-weight: bold;" />
+
+				<h:outputLabel />
+				<h:outputLabel />
+-->
+				<p:outputLabel value="#{msgs.applicant_filenumber}" />
+				<p:outputLabel
+					value="#{amdreghomeMBean.selectedApplicant.fileNumber}"
+					style="font-weight: bold;" />
+
+				<p:outputLabel value="#{msgs.applicant_phone}"
+					style="text-align: right" />
+				<p:outputLabel
+					value="#{amdreghomeMBean.selectedApplicant.phoneNo}"
+					style="font-weight: bold;" />
+
+				<p:outputLabel value="#{msgs.applicant_faxno}" />
+				<p:outputLabel value="#{amdreghomeMBean.selectedApplicant.faxNo}"
+					style="font-weight: bold;" />
+
+				<p:outputLabel value="#{msgs.applicant_website}" />
+				<p:outputLabel
+					value="#{amdreghomeMBean.selectedApplicant.website}"
+					style="font-weight: bold;" />
+
+			</h:panelGrid>
+		</h:panelGroup>
+		<!-- action="#{amdreghomeMBean.storeSelectedApplicant()}" -->
+		<h:panelGrid columns="2" cellspacing="5" columnClasses="label, value"
+			styleClass="grid">
+			<h:panelGroup id="btnpnl">
+				<p:commandButton value="#{msgs.global_save}"
+					action="#{amdreghomeMBean.storeSelectedApplicant()}"
+					oncomplete="!if(args.validationFailed) PF('addapplicantDlg').hide()"
+					update=":reghome" process=":reghome:addapplicantdlg"
+					rendered="#{amdreghomeMBean.hasSelectedApplicant()}" />
+				<p:commandButton immediate="true" value="#{msgs.global_cancel}"
+					update=":reghome" oncomplete="PF('addapplicantDlg').hide()" />
+			</h:panelGroup>
+			<h:outputLabel />
+		</h:panelGrid>
+	</p:dialog>
+</ui:composition>

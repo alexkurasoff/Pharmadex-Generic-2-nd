@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+			<ui:param name="value"
+				value="#{amdEDIT_APIMBean.amendment.appComment}" />
+			<ui:param name="rendered" value="false" />
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.global_update} #{msgs.product_active}">
+		<p:panel header="#{msgs.newvalue}">
+			<ui:decorate template="/templates/prodInnDetail.xhtml">
+				<ui:param name="prodInn" value="#{amdEDIT_APIMBean.newValue}"/>
+				<ui:param name="edit" value="#{false}"/>
+			</ui:decorate>
+		</p:panel>
+    </p:panel>
+    <p:panel header="#{msgs.approved_date}" rendered="#{amdEDIT_APIMBean.hasApprDate()}"> 
+		<h:outputLabel value="#{amdEDIT_APIMBean.amendment.apprDate}">
+			<f:convertDateTime timeStyle="short" />
+		</h:outputLabel>
+	</p:panel>
+</ui:composition>

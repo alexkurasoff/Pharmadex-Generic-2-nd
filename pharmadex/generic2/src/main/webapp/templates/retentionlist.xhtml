@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="#{formid}" prependId="true">
+		<p:dataTable id="amdtable" var="invoice" value="#{invoices}">
+			<p:column headerText="#{msgs.global_date}">
+				<p:outputLabel value="#{invoice.issueDate}">
+					<f:convertDateTime timeStyle="short" />
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="#{msgs.applicant_name}">
+				<p:outputLabel value="#{invoice.applicantName}" />
+			</p:column>
+			
+			<p:column style="width:40px">
+				<h:commandLink action="/secure/retention.faces" rendered="#{editable}" value="" styleClass="ui-icon ui-icon-pencil" >
+					<f:setPropertyActionListener value="#{invoice.id}" target="#{retentionMBean.retentionIdToFlash}" />					
+					<f:setPropertyActionListener value="#{source}" target="#{retentionMBean.returnPathToFlash}" />
+				</h:commandLink>
+				 <h:commandLink action="/internal/processretentionreg.faces" rendered="#{!editable}" value="" styleClass="ui-icon ui-icon-search" >
+					<f:setPropertyActionListener value="#{invoice.id}" target="#{processRetentionregMBean.retentionIdToFlash}" />					
+					<f:setPropertyActionListener value="#{source}" target="#{processRetentionregMBean.returnPathToFlash}" />
+				</h:commandLink>
+			</p:column>
+			
+		</p:dataTable>
+	</h:form>
+
+</ui:composition>

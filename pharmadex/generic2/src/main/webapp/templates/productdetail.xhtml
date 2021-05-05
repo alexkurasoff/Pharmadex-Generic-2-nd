@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+            <p:panelGrid cellspacing="10" style="width: 100%;" id = "productdetail">
+	            <p:row>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.prod_app_type}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		<p:outputLabel value="#{msgs[prodAppKey]}"/>
+	            	</p:column>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.prod_cat}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		<p:outputLabel value="#{msgs[product.prodCategory.key]}"/>
+	            	</p:column>
+	            </p:row>
+	            <p:row>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.prodName}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		 <p:outputLabel value="#{product.prodName}"/>
+	            	</p:column>
+	            	<p:column styleClass="col1_top"> </p:column>
+	            	<p:column styleClass="col2_top"> </p:column>
+	            </p:row>
+	            <p:row>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.prodgenname}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		 <p:outputLabel value="#{product.genName}"/>
+	            	</p:column>
+	            	<p:column styleClass="col1_top"> </p:column>
+	            	<p:column styleClass="col2_top"> </p:column>
+	            </p:row>
+				<p:row>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.dos_form}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		<p:outputLabel value="#{product.dosForm.dosForm}"/>
+	            	</p:column>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.dos_unit}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		<p:outputLabel value="#{product.dosUnit.uom}"/>
+	            	</p:column>
+	            </p:row>
+	            <p:row>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.dos_strength}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		 <p:outputLabel value="#{product.dosStrength}"/>
+	            	</p:column>
+	            	<p:column styleClass="col1_top"> </p:column>
+	            	<p:column styleClass="col2_top"> </p:column>
+	            </p:row>
+				<p:row>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.admin_route}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		<p:outputLabel value="#{msgs[product.adminRoute.key]}"/>
+	            	</p:column>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.age_group}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		<p:outputLabel value="#{msgs[product.ageGroup.key]}"/>
+	            	</p:column>
+	            </p:row>
+	            <p:row>
+	            	<p:column styleClass="col1_top">
+	            		<p:outputLabel value="#{msgs.prod_desc}"/>
+	            	</p:column>
+	            	<p:column styleClass="col2_top">
+	            		 <p:outputLabel value="#{product.prodDesc}"/>
+	            	</p:column>
+	            	<p:column styleClass="col1_top"> </p:column>
+	            	<p:column styleClass="col2_top"> </p:column>
+	            </p:row>
+            </p:panelGrid>
+
+</ui:composition>

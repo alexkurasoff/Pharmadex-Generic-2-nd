@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:remove>
+		param 'prodInn'
+		param 'edit'
+		param 'editInn'
+	</ui:remove>
+	
+	<h:panelGrid id="inndetail" columns="4" cellspacing="5"
+		columnClasses="col1, col2, col1, col2">
+		<p:outputLabel value="#{msgs.product_innname}" for="innname" />
+		<p:autoComplete id="innname" value="#{prodInn.inn}"
+						completeMethod="#{globalEntityLists.completeInnCodes}" var="it"
+						itemLabel="#{it.name}" itemValue="#{it}" converter="#{innConverter}"
+						forceSelection="false" scrollHeight="200" required="true"
+						requiredMessage="#{msgs.product_innname_valid}" disabled="#{empty editInn ? !edit : !editInn}">
+		</p:autoComplete><!-- empty rendered ? false : rendered ? false : true -->
+		<p:outputLabel />
+		<p:outputLabel />
+
+		<p:outputLabel value="#{msgs.dos_strength}" for="innqty" />
+		<p:inputText id="innqty" value="#{prodInn.dosStrength}" required="true" disabled="#{!edit}"/>
+		<p:outputLabel />
+		<p:outputLabel />
+<!-- converter="omnifaces.SelectItemsConverter" -->
+		<p:outputLabel value="#{msgs.dos_unit}" for="innunit" />
+		<!-- <p:selectOneMenu id="innunit" value="#{prodInn.dosUnit}" converter="omnifaces.SelectItemsConverter"
+			requiredMessage="#{msgs.valid_dos_form}" required="true" disabled="#{!edit}">
+			<f:selectItem itemLabel="#{prodInn.dosUnit.uom}" itemValue="#{prodInn.dosUnit.id}" />
+			<f:selectItems value="#{globalEntityLists.dosUoms}" var="dosUom"
+				itemLabel="#{dosUom.uom}" itemValue="#{dosUom.id}" />
+			<f:ajax render="select_item" />
+		</p:selectOneMenu> -->
+		
+		<p:selectOneMenu id="innunit" value="#{prodInn.dosUnit.id}"
+                         requiredMessage="#{msgs.valid_dos_form}" required="true" disabled="#{!edit}">
+            <f:selectItem itemLabel="-" itemValue=""/>
+            <f:selectItems value="#{globalEntityLists.dosUoms}" var="dosUom" 
+            				itemLabel="#{dosUom.uom}" itemValue="#{dosUom.id}"/>
+        </p:selectOneMenu>
+        
+		<!-- <p:selectOneMenu id="alllist" value="#{userMBean.userApp.applcntId}">
+	                       	<f:selectItem itemLabel="#{userMBean.applicName}" itemValue="#{userMBean.applicID}"/>
+	                        <f:selectItems value="#{applicantService.findAllApplicants(userMBean.applicID)}" var="licHolder"
+	                                      itemLabel="#{licHolder.appName}" itemValue="#{licHolder.applcntId}"/>
+	                    </p:selectOneMenu>
+ -->
+		<h:outputLabel value="#{msgs.inn_ref}" for="innref" />
+		<p:inputText id="innref" value="#{prodInn.refStd}" disabled="#{!edit}"/>
+
+		<h:outputLabel />
+		<h:outputLabel />
+		<h:outputLabel />
+		<h:outputLabel />
+	</h:panelGrid>
+	<ui:decorate template="#{companyMBean.getTemplate(edit)}">
+		<ui:param name="companydata" value="#{companyMBean.selectedCompany}" />
+		<ui:param name="showCompType" value="#{false}" />
+	</ui:decorate>
+</ui:composition>

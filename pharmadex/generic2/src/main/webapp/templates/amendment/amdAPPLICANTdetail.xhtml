@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+			<ui:param name="value"
+				value="#{amdAPPLICANTMBean.amendment.appComment}" />
+			<ui:param name="height" value="180"/>
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.applicant_name}">
+		<p:panelGrid columns="2">
+			<p:panel header="#{msgs.oldvalue}">
+				<h:outputLabel value="#{amdAPPLICANTMBean.applicant.appName}"
+					style="font-weight: bold;" />
+			</p:panel>
+			<p:panel header="#{msgs.newvalue}">
+				<p:inputText value="#{amdAPPLICANTMBean.applicantName}"
+					required="true" style="width:300px !important" />
+			</p:panel>
+		</p:panelGrid>
+	</p:panel>
+	<p:panel header="#{msgs.applicant_addr1}">
+		<p:panelGrid columns="2">
+			<p:panel header="#{msgs.oldvalue}">
+				<p:panelGrid columns="2">
+					<ui:decorate template="/templates/addrtempl.xhtml">
+						<ui:param name="addressdata"
+							value="#{amdAPPLICANTMBean.applicant.address}" />
+						<ui:param name="input" value="false" />
+					</ui:decorate>
+				</p:panelGrid>
+			</p:panel>
+			<p:panel header="#{msgs.newvalue}">
+				<p:panelGrid columns="2">
+					<ui:decorate template="/templates/addrtempl.xhtml">
+						<ui:param name="addressdata"
+							value="#{amdAPPLICANTMBean.applicantAddress}" />
+						<ui:param name="input" value="true" />
+					</ui:decorate>
+				</p:panelGrid>
+			</p:panel>
+		</p:panelGrid>
+	</p:panel>
+</ui:composition>

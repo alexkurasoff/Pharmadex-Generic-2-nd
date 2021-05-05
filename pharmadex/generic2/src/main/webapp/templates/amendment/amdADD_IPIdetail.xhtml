@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+			<ui:param name="value"
+				value="#{amdADD_IPIMBean.amendment.appComment}" />
+			<ui:param name="height" value="180" />
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.product_active}" >
+		<p:panelGrid id="prodExpPnl" columns="2" >
+			<p:panel header="#{msgs.oldvalue}" style="vertical-align: top;">
+				<p:dataTable var="pExp" value="#{amdADD_IPIMBean.oldExcipients}" style="width:100%;">
+					<p:column headerText="#{msgs.excipient_name}">
+						<h:outputText value="#{pExp.excipient.name}" />
+					</p:column>
+					<p:column headerText="#{msgs.dos_strength}">
+						<h:outputText value="#{pExp.dosStrength}" />
+					</p:column>
+					<p:column headerText="#{msgs.dos_unit}">
+						<h:outputText value="#{pExp.dosUnit.uom}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:panel header="#{msgs.newvalue}">
+				<p:commandButton id="addBtn" value="#{msgs.add_product_active}" oncomplete="PF('addExcDlg').show()" 
+                        process="@this" ajax="true"
+						update=":reghome:addExcdlg :reghome:addExc :reghome:growl">
+			            <p:resetInput target=":reghome:addExc:excdetail" />
+				</p:commandButton>
+				<p:dataTable id="excpntTable" var="prodExp"
+					value="#{amdADD_IPIMBean.newExcipients}" style="width:100%;">
+					<p:column headerText="#{msgs.excipient_name}">
+						<h:outputText value="#{prodExp.excipient.name}" />
+					</p:column>
+		
+					<p:column headerText="#{msgs.dos_strength}">
+						<h:outputText value="#{prodExp.dosStrength}" />
+					</p:column>
+		
+					<p:column headerText="#{msgs.dos_unit}">
+						<h:outputText value="#{prodExp.dosUnit.uom}" />
+					</p:column>
+					
+					<p:column>
+						<p:commandLink action="#{amdADD_IPIMBean.removeProdExc(prodExp)}"
+									value="" styleClass="ui-icon ui-icon-trash" immediate="true" ajax="true"
+									update=":reghome:excpntTable :reghome:growl"/>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+		</p:panelGrid>
+		
+		<p:dialog header="#{msgs.add_product_active}" widgetVar="addExcDlg" id="addExcdlg" resizable="true"
+                  modal="true" dynamic="true" width="800px">
+            <h:form id="addExc">
+            	<ui:decorate template="/templates/prodExcipientDetail.xhtml">
+					<ui:param name="prodExc" value="#{amdADD_IPIMBean.newProdExc}"/>
+				    <ui:param name="edit" value="#{true}"/>
+			    </ui:decorate>
+                <p:commandButton value="#{msgs.global_add}"	action="#{amdADD_IPIMBean.addProdExcipient()}"
+	                 	oncomplete="if (!args.validationFailed) PF('addExcDlg').hide()" process=":reghome:addExcdlg"
+	                 	update=":reghome:prodExpPnl :reghome:growl"/>
+                <p:commandButton immediate="true" value="#{msgs.global_cancel}" 
+                				 process=":reghome:addExcdlg"
+                                 oncomplete="PF('addExcDlg').hide()" /> 
+            </h:form>
+        </p:dialog>
+	</p:panel>
+
+</ui:composition>

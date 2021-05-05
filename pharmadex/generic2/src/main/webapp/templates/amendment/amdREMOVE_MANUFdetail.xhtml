@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+			<ui:param name="value"
+				value="#{amdREMOVE_MANUFMBean.amendment.appComment}" />
+			<ui:param name="height" value="180" />
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.manufacturer_detail}" >
+		<p:dataTable id="compTable" var="prodComp" value="#{amdREMOVE_MANUFMBean.allManufs}" style="width:100%;">
+			<p:column headerText="#{msgs.manuf_name}">
+            	<h:outputText value="#{prodComp.prodCompany.company.companyName}"/>
+            </p:column>
+
+            <p:column headerText="#{msgs.applicant_country}">
+            	<h:outputText value="#{prodComp.prodCompany.company.address.country.countryName}"/>
+            </p:column>
+
+            <p:column headerText="#{msgs.manuf_type}">
+           		<h:outputText value="#{msgs[prodComp.prodCompany.companyType.key]}"/>
+            </p:column>
+
+            <p:column headerText="#{msgs.applicant_phone}">
+            	<h:outputText value="#{prodComp.prodCompany.company.phoneNo}"/>
+            </p:column>
+			<p:column>
+				<p:commandLink action="#{amdREMOVE_MANUFMBean.setDeleteProdCompanyDTO(prodComp)}" 
+									rendered="#{!prodComp.delete}"
+									value="" styleClass="ui-icon ui-icon-trash" immediate="true" ajax="true"
+									update=":reghome:compTable :reghome:growl"/>
+				<p:commandLink action="#{amdREMOVE_MANUFMBean.setDeleteProdCompanyDTO(prodComp)}" 
+									rendered="#{prodComp.delete}"
+									value="" styleClass="ui-icon ui-icon-close"  
+									immediate="true" ajax="true"
+									update=":reghome:compTable :reghome:growl"/>
+		    </p:column>
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>

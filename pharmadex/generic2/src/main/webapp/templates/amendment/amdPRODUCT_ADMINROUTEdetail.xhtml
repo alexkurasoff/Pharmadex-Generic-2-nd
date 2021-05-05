@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+		 	<ui:param name="value"
+				value="#{amdPRODUCT_ADMINROUTEMBean.amendment.appComment}" />
+			<ui:param name="height" value="180"/>
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.admin_route}">
+		<p:panelGrid columns="2">
+			<p:panel header="#{msgs.oldvalue}" style="width:450px">
+				<h:outputLabel value="#{amdPRODUCT_ADMINROUTEMBean.oldAdminRouteName}"
+					style="font-weight: bold;" />
+			</p:panel>
+			<p:panel header="#{msgs.newvalue}" style="width:450px">
+				<p:autoComplete id="adminroutecb" value="#{amdPRODUCT_ADMINROUTEMBean.adminRoute}" 
+					    completeMethod="#{amdPRODUCT_ADMINROUTEMBean.completeAdminRoute}" 
+					    converter="#{adminRouteConverter}" forceSelection="true"
+					    var="main" itemLabel="#{main.name}" itemValue="#{main}"
+					    scrollHeight="200" dropdown="true"
+					    required="true" requiredMessage="#{msgs.valid_value_req}"
+					     style="width:200px">
+						<p:ajax event="itemSelect" listener="#{amdPRODUCT_ADMINROUTEMBean.onItemSelect}" 
+								update="@form" process="@form"/>
+					</p:autoComplete>
+					
+				<!-- <p:selectOneMenu id="adminroutecb" value="#{amdPRODUCT_ADMINROUTEMBean.adminRoute}" 
+							required="true" requiredMessage="#{msgs.valid_value_req}">
+		            <f:selectItem itemLabel="-" itemValue=""/>
+		            <f:selectItems value="#{globalEntityLists.adminRoutes}" var="type" itemLabel="#{type.name}"
+		                           itemValue="#{type.id}"/>
+        		</p:selectOneMenu> -->
+			</p:panel>
+		</p:panelGrid>
+	</p:panel> 
+</ui:composition>

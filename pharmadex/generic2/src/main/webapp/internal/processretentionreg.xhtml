@@ -1,0 +1,161 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/templates/admin_layout.xhtml">
+	
+	<ui:define name="content">
+		<h:form id="retentionfrm" enctype="multipart/form-data">
+			<p:growl id="growl" showDetail="false" />
+
+			<h:panelGrid columns="2" columnClasses="menu,content">
+				<h:panelGrid columns="2" columnClasses="menu,content">
+
+					<ui:include src="processretentionmenu.xhtml" />
+
+					<h:panelGroup styleClass="ui-widget" id="banner">
+						<p:messages id="messages" showDetail="false" showSummary="true" />
+
+						<p:tabView id="processtab" style="width: 830px;"
+							activeIndex="#{processAmdregMBean.selectedTab}" dynamic="true"
+							cache="false">
+							<p:ajax event="tabChange"
+								listener="#{processRetentionregMBean.onTabChange}" />
+								
+							<p:tab title="#{msgs.payment_info}" id="paytab">
+								<p:panel>	
+									<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="10" cellspacing="10">
+										<p:outputLabel value="#{msgs.payment_amt_received}" styleClass="label"/>
+										<p:selectBooleanButton id="peyreceived"
+											value="#{processRetentionregMBean.payment.payment_received}"
+											onLabel="#{msgs.global_yes}" offLabel="#{msgs.global_no}"
+											onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px"
+											disabled="#{processRetentionregMBean.canVerifPaymant()}">
+											<p:ajax listener="#{processRetentionregMBean.changeStatusListener}"
+												update="retentionfrm:processtab retentionfrm:retmenu" />
+										</p:selectBooleanButton>
+									</h:panelGrid>
+									<ui:decorate template="/templates/amdpayment.xhtml">
+										<ui:param name="payment" value="#{processRetentionregMBean.payment}" />
+										<ui:param name="readonly" value="true" />
+									</ui:decorate>
+								</p:panel>
+							</p:tab>
+						
+							 
+							<p:tab title="#{msgs.global_summary}" id="processtab">								
+								<p:panel>
+									<h:panelGrid columns="2" cellspacing="10" columnClasses="label, value" styleClass="grid">
+										<p:outputLabel value="#{msgs.applicant_name}" styleClass="label" />
+										<p:outputLabel value="#{processRetentionregMBean.applicant.appName}"/>	
+																				
+										<p:outputLabel value="#{msgs.label_AmdState}" styleClass="label" />
+										<h:outputLabel value="#{msgs[processRetentionregMBean.invoice.state.key]}" />								
+									</h:panelGrid>
+								</p:panel>
+								<p:panel>
+									<ui:decorate template="/templates/retentionProducts.xhtml">
+											<ui:param name="readonly" value="true" />
+									</ui:decorate>
+								</p:panel>
+							</p:tab>
+						</p:tabView>
+
+						<p:blockUI block="processtab"
+							trigger=":retentionfrm:processtab ">
+							<p:graphicImage value="/resources/images/ajax-loader.gif" />
+						</p:blockUI>
+
+
+					</h:panelGroup>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	
+		<p:dialog header="#{msgs.comment}" widgetVar="rejectDlg"
+			resizable="false" id="rejectdlg" modal="true" dynamic="true" closable="false">
+			<h:form id="rejectdatedlg">
+				<h:panelGrid columns="3" style="margin-bottom:10px">
+					<p:outputLabel value="#{msgs.rejected_date}" id="rejectdate"
+						for="rejDate" />
+					<p:calendar
+						value="#{processRetentionregMBean.invoice.rejectDate}"
+						id="rejDate" showOn="button" required="true"
+						pattern="#{userAccessMBean.workspace.datePattern}"/>
+					<p:message for="rejDate" />
+				</h:panelGrid>
+			<!-- <ui:decorate template="/templates/ckeditor.xhtml" >
+					<ui:param name="value" value="#{processRetentionregMBean.rejectComment}"/>
+					<ui:param name="height" value="180"/>
+					<ui:param name="required" value="#{true}" />
+				</ui:decorate> -->
+				
+				<h:panelGrid columns="2" style="margin-top:10px">
+					<p:commandButton id="notrecomBtn" value="#{msgs.global_reject}"
+						icon="ui-icon-gear" ajax="false"
+						action="#{processRetentionregMBean.reject()}"
+						update=":retentionfrm:messages :retentionfrm @form"/>
+					<p:commandButton id="cancellet" type="button"
+						value="#{msgs.global_cancel}" onclick="PF('rejectDlg').hide()"
+						icon="ui-icon-close" ajax="false" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog header="#{msgs.global_approve}" widgetVar="approveDlg"
+			resizable="false" id="approvedlg" modal="true" dynamic="true" closable="false">
+			<h:form id="approvedatedlg">
+				<h:panelGrid columns="2" style="margin-bottom:10px">
+					<p:outputLabel value="#{msgs.approved_date}" id="approvedate"
+						for="apprDate" />
+					<p:calendar
+						value="#{processRetentionregMBean.apprDate}"
+						id="apprDate" showOn="button" required="true"
+						pattern="#{userAccessMBean.workspace.datePattern}">
+						<f:validator validatorId="pastDateValid"/>
+					</p:calendar>
+				</h:panelGrid>			
+				<h:panelGrid columns="2" style="margin-bottom:10px">
+					<p:outputLabel value="#{msgs.retain_until}" id="regexpirydate"
+						for="regExpiryDate" />
+					<p:calendar
+						value="#{processRetentionregMBean.regExpiryDate}"
+						id="regExpiryDate" showOn="button" required="true"
+						pattern="#{userAccessMBean.workspace.datePattern}">
+						<f:validator validatorId="pastDateValid"/>
+					</p:calendar>
+				</h:panelGrid>
+				<h:panelGrid columns="2" style="margin-top:10px">
+					<p:commandButton id="approveBtn" value="#{msgs.global_approve}"
+						icon="ui-icon-gear" ajax="false"
+						action="#{processRetentionregMBean.approve()}"
+                        oncomplete="if (!args.validationFailed) PF('approveDlg').hide()"
+                        update=":approvedatedlg"/>
+					<p:commandButton id="cancellet" type="button"
+						value="#{msgs.global_cancel}" onclick="PF('approveDlg').hide()"
+						icon="ui-icon-close" ajax="false" />
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog modal="true" widgetVar="statusDialog" draggable="false"
+			closable="false" resizable="false" dynamic="true" showHeader="false">
+			<p:graphicImage value="/resources/images/ajax-loader.gif" />
+		</p:dialog>
+
+		<script type="text/javascript">
+			function start() {
+			PF('statusDialog').show();
+			setTimeout(function() {
+				PF('statusDialog').hide();
+			}, 3000);
+			}
+				
+			function stop() {
+			PF('statusDialog').hide();
+			}
+		</script>
+	</ui:define>
+</ui:composition>

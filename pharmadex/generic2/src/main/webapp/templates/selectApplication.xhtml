@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:panel header="#{msgs.applicant_detail}">
+		<h:panelGroup>
+			<h:outputLabel value="#{msgs.select_applicant_list}" />
+			<h:panelGrid columns="1" cellpadding="10px">
+				<p:commandLink value="#{msgs.applicant_lookup}"
+						oncomplete="PF('addapplicantDlg').show()" immediate="true"
+						style="font-weight: bolder; font-size: larger" />
+				<p:outputLabel value="#{msgs.applicant_lookup_info}"
+						styleClass="hint" />
+			</h:panelGrid>
+		</h:panelGroup>
+	
+		<h:panelGroup rendered="#{selectApplicantMBean.hasApplicant()}">
+			<ui:decorate template="/templates/applicantdetailtmpl.xhtml">
+				<ui:param name="applicantdata" value="#{selectApplicantMBean.applicant}" />
+				<ui:param name="input" value="#{false}" />
+			</ui:decorate>
+		</h:panelGroup>
+	</p:panel>
+ 	
+	<h:panelGroup rendered="#{selectApplicantMBean.hasApplicant()}">
+		<p:panel header="#{msgs.person_responsible}">
+			<h:panelGroup id="userdetail">
+				<ui:decorate template="/templates/userdetailtmpl.xhtml">
+					<ui:param name="userdata" value="#{selectApplicantMBean.applicantUser}" />
+					<ui:param name="input" value="#{false}" />
+				</ui:decorate>
+			</h:panelGroup>
+		</p:panel>
+	</h:panelGroup>
+
+		<p:dialog header="#{msgs.applicant}" widgetVar="addapplicantDlg"
+			id="addapplicantdlg" width="600">
+			<h:panelGrid columns="2" cellspacing="5" columnClasses="value, value"
+				styleClass="grid">
+				<h:outputLabel value="#{msgs.applicant_name}" for="appname" />
+				<p:autoComplete id="appname"
+					value="#{selectApplicantMBean.selectedApplicant}"
+					completeMethod="#{selectApplicantMBean.completeApplicantList}"
+					dropdown="true" var="it" itemLabel="#{it.appName}"
+					itemValue="#{it.applcntId}" forceSelection="true"
+					converter="#{applicantConverter}" scrollHeight="200">
+					<p:ajax event="itemSelect"
+						update=":retentionfrm:appdetaildlg :retentionfrm:btnpnl"
+						listener="#{selectApplicantMBean.appChangeListenener}"
+						partialSubmit="true" process=":retentionfrm:appname" />
+					<p:ajax event="change"
+						listener="#{selectApplicantMBean.appChangeListenener}"
+						update=":retentionfrm:appdetaildlg :retentionfrm:btnpnl" partialSubmit="true"
+						process=":retentionfrm:appname" />
+				</p:autoComplete>
+			</h:panelGrid>
+	
+			<h:panelGroup id="appdetaildlg">
+				<h:panelGrid columns="4" cellpadding="10px" cellspacing="6px"
+					width="100%" columnClasses="col1, col2, col1, col2"
+					rendered="#{selectApplicantMBean.hasSelectedApplicant()}">
+					<p:outputLabel value="#{msgs.applicant_name}" />
+					<p:outputLabel
+						value="#{selectApplicantMBean.selectedApplicant.appName}"
+						style="font-weight: bold;" />
+	
+					<ui:decorate template="/templates/addrtempl.xhtml">
+						<ui:param name="addressdata"
+							value="#{selectApplicantMBean.selectedApplicant.address}" />
+						<ui:param name="input" value="false" />
+					</ui:decorate>
+	
+					<p:outputLabel value="#{msgs.applicant_filenumber}" />
+					<p:outputLabel
+						value="#{selectApplicantMBean.selectedApplicant.fileNumber}"
+						style="font-weight: bold;" />
+	
+					<p:outputLabel value="#{msgs.applicant_phone}"
+						style="text-align: right" />
+					<p:outputLabel
+						value="#{selectApplicantMBean.selectedApplicant.phoneNo}"
+						style="font-weight: bold;" />
+	
+					<p:outputLabel value="#{msgs.applicant_faxno}" />
+					<p:outputLabel value="#{selectApplicantMBean.selectedApplicant.faxNo}"
+						style="font-weight: bold;" />
+	
+					<p:outputLabel value="#{msgs.applicant_website}" />
+					<p:outputLabel
+						value="#{selectApplicantMBean.selectedApplicant.website}"
+						style="font-weight: bold;" />
+	
+				</h:panelGrid>
+			</h:panelGroup>
+			
+			<h:panelGrid columns="2" cellspacing="5" columnClasses="label, value"
+				styleClass="grid">
+				<h:panelGroup id="btnpnl">
+					<p:commandButton value="#{msgs.global_save}"
+						action="#{selectApplicantMBean.storeSelectedApplicant()}"
+						oncomplete="!if(args.validationFailed) PF('addapplicantDlg').hide()"
+						update=":retentionfrm" process=":retentionfrm:addapplicantdlg"
+						rendered="#{selectApplicantMBean.hasSelectedApplicant()}" />
+					<p:commandButton immediate="true" value="#{msgs.global_cancel}"
+						update=":retentionfrm" oncomplete="PF('addapplicantDlg').hide()" />
+				</h:panelGroup>
+				<h:outputLabel />
+			</h:panelGrid>
+		</p:dialog>
+	
+</ui:composition>

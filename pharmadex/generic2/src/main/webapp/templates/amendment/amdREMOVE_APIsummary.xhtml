@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<p:panel header="#{msgs.reviewer_change_reason}">
+		<ui:decorate template="/templates/ckeditor.xhtml">
+			<ui:param name="value"
+				value="#{amdREMOVE_APIMBean.amendment.appComment}" />
+			<ui:param name="rendered" value="false" />
+		</ui:decorate>
+	</p:panel>
+	<p:panel header="#{msgs.global_delete} #{msgs.active_substance}">
+		<p:dataTable var="prodInn" value="#{amdREMOVE_APIMBean.delInns}" style="width:100%;">
+			<p:column headerText="#{msgs.product_innname}">
+				<h:outputText value="#{prodInn.inn.name}" />
+			</p:column>
+			<p:column headerText="#{msgs.dos_strength}">
+				<h:outputText value="#{prodInn.dosStrength}" />
+			</p:column>
+			<p:column headerText="#{msgs.dos_unit}">
+				<h:outputText value="#{prodInn.dosUnit.uom}" />
+			</p:column>
+			<p:column headerText="#{msgs.manuf_name}">
+				<h:outputText value="#{prodInn.company.companyName}" />
+			</p:column>
+		</p:dataTable>
+    </p:panel>
+    <p:panel header="#{msgs.approved_date}" rendered="#{amdREMOVE_APIMBean.hasApprDate()}"> 
+		<h:outputLabel value="#{amdREMOVE_APIMBean.amendment.apprDate}">
+			<f:convertDateTime timeStyle="short" />
+		</h:outputLabel>
+	</p:panel>
+</ui:composition>
