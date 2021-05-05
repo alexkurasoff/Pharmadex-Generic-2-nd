@@ -8,9 +8,6 @@
     <version>1.0</version>
     <modules>
         <module>core</module>
-        <module>namibia</module>
-		<module>mozambique</module>
-		<module>generic</module>
 		<module>generic2</module>
     </modules>
     <name>pharmadex</name>
