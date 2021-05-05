@@ -1,4 +1,4 @@
-# Pharmadex 1.5 Wab Archive (WAR)
+# Pharmadex 1.5 Web Archive (WAR)
 	This folder contains modular Java Maven project to build executable WAR file
 	* core is common library
 	* database is a dump of the database contains sample database
